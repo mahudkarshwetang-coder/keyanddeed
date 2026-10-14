@@ -78,6 +78,7 @@ The free prosumer toolkit — landing + 4 calculators + charter pages + waitlist
 - ✅ All 5 tools + 4 doctrine pages + 3 legal pages + waitlist + 404/robots/sitemap/favicon/og.png built.
 - ✅ `node tests/smoke.mjs` → 68/68 checks; live server → 20/20 URLs HTTP 200; true-390px/360px + desktop layout QA clean.
 - ✅ Git repo initialized (`main`); `scripts/finalize.py` + `scripts/inject_meta.py` ready for brand lock.
+- ✅ UX pass (post-review): active nav state, result **meters** (micro bar-charts on all 5 tools), "What next?" panels (no more dead ends), "Spotted a wrong number?" feedback line, standardized navs.
 - ⏳ Human steps: domains → `finalize.py` → og.png regen → FormSubmit activation (1 click) → deploy → socials (guided).
 - Next: CIPO trademark, independent a11y audit, then **partner-brokerage outreach** (the licensed envelope).
 - QA gotcha: headless Edge on Windows clamps window width (~500px min) then crops — never judge mobile from `--window-size` screenshots; use an iframe/emulation harness.
