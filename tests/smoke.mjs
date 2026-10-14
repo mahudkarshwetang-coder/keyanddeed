@@ -20,7 +20,7 @@ const ok = (cond, msg) => {
 const toolPages = ['tools/toll.html','tools/coop-off.html','tools/rent.html','tools/rto.html','tools/leverage.html'];
 const allPages = ['index.html','404.html', ...toolPages,
   'pages/open-book.html','pages/rto-charter.html','pages/fee-card.html','pages/how-we-make-money.html',
-  'pages/privacy.html','pages/terms.html','pages/accessibility.html'];
+  'pages/privacy.html','pages/terms.html','pages/accessibility.html','pages/coop-playbook.html'];
 
 function buildDom(html) {
   const ids = {};
