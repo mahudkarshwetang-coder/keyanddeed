@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Rent Estimator — [[NAME]]</title>
+<meta name="description" content="What's fair rent for this unit, in this market? Built on CMHC Fall 2025 data. Free, no signup, sources included.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#0e1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Rent Estimator — [[NAME]]">
+<meta property="og:description" content="What's fair rent for this unit, in this market? Built on CMHC Fall 2025 data. Free, no signup, sources included.">
+<meta property="og:image" content="../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">[[NAME]]</a>
+    <nav>
+      <a href="toll.html">Toll Calculator</a>
+      <a href="coop-off.html">Co-op-Off</a>
+      <a href="rent.html">Rent Estimator</a>
+      <a href="rto.html">RTO Calculator</a>
+      <a href="leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>The Rent Estimator</h1>
+  <p class="lead">What's actually fair for this unit, in this market — built on CMHC's Fall 2025 survey, not on vibes. Landlord or renter: walk in with a number.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div><label for="city">City</label>
+        <select id="city">
+          <option value="toronto" selected>Toronto (GTA)</option>
+          <option value="vancouver">Vancouver</option>
+          <option value="calgary">Calgary</option>
+          <option value="edmonton">Edmonton</option>
+          <option value="ottawa">Ottawa</option>
+          <option value="montreal">Montréal</option>
+          <option value="winnipeg">Winnipeg</option>
+          <option value="hamilton">Hamilton</option>
+          <option value="kitchener">Kitchener–Cambridge–Waterloo</option>
+          <option value="london">London</option>
+          <option value="halifax">Halifax</option>
+          <option value="victoria">Victoria</option>
+          <option value="saskatoon">Saskatoon</option>
+          <option value="regina">Regina</option>
+          <option value="quebec-city">Québec City</option>
+          <option value="gatineau">Gatineau</option>
+          <option value="st-catharines">St. Catharines–Niagara</option>
+          <option value="windsor">Windsor</option>
+        </select>
+      </div>
+      <div><label for="beds">Bedrooms</label>
+        <select id="beds">
+          <option value="0.62">Studio</option>
+          <option value="0.80">1 bedroom</option>
+          <option value="1" selected>2 bedrooms</option>
+          <option value="1.25">3+ bedrooms</option>
+        </select>
+      </div>
+      <div><label for="type">Building type</label>
+        <select id="type">
+          <option value="pb" selected>Purpose-built rental</option>
+          <option value="condo">Condo apartment</option>
+        </select>
+      </div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="parking" type="checkbox" style="width:auto"> Parking (+$100)</label></div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="laundry" type="checkbox" style="width:auto"> In-suite laundry (+$50)</label></div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="reno" type="checkbox" style="width:auto"> Recently renovated (+6%)</label></div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="furn" type="checkbox" style="width:auto"> Furnished (+18%)</label></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="result-line" id="bigline" aria-live="polite">—</div>
+    <p class="note" id="context">—</p>
+    <div class="grid">
+      <div><p class="note">Purpose-built 2-bed avg (all tenants)</p><div class="out" id="pbv">—</div></div>
+      <div><p class="note">Condo 2-bed avg</p><div class="out" id="condov">—</div></div>
+      <div><p class="note">Turnover rent (new tenants, 2-bed)</p><div class="out" id="turnv">—</div></div>
+      <div><p class="note">Purpose-built vacancy</p><div class="out" id="vacv">—</div></div>
+    </div>
+    <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">Sources &amp; assumptions</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li>Baselines: CMHC Rental Market Report, <strong>Fall 2025</strong> (October 2025 survey) — purpose-built and condominium apartment averages, 2-bedroom. Turnover = rents paid by new tenants.</li>
+      <li>Bedroom factors (v1 approximations): studio 0.62× · 1-bed 0.80× · 3-bed+ 1.25× of the 2-bedroom average. Feature adds (parking/laundry/reno/furnished) are market heuristics, not CMHC figures. Range = ±6%.</li>
+      <li>Estimates only — <em>not an appraisal, not advice</em>. Every building differs; treat this as your opening number, not gospel.</li>
+    </ul>
+  </section>
+
+  <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  /* Mirrors data/rents.json — CMHC Fall 2025 */
+  var D = {
+    toronto:      {label:"Toronto (GTA)", vac:3.0, pb:2034, pbChg:3.5, cvac:1.0, condo:2904, turn:2547},
+    vancouver:    {label:"Vancouver", vac:3.7, pb:2363, pbChg:2.2, cvac:1.5, condo:2900, turn:2696},
+    victoria:     {label:"Victoria", vac:3.3, pb:2120, pbChg:5.1, cvac:0.3, condo:2688},
+    calgary:      {label:"Calgary", vac:5.0, pb:1914, pbChg:0.0, cvac:2.2, condo:2030, turn:1836},
+    edmonton:     {label:"Edmonton", vac:3.8, pb:1603, pbChg:3.5, cvac:1.7, condo:1655, turn:1600},
+    ottawa:       {label:"Ottawa", vac:3.0, pb:1926, pbChg:3.4, cvac:0.6, condo:2503, turn:2155},
+    montreal:     {label:"Montréal", vac:2.9, pb:1346, pbChg:7.2, cvac:2.1, condo:1826, turn:1644},
+    winnipeg:     {label:"Winnipeg", vac:2.8, pb:1571, pbChg:1.9, cvac:1.1, condo:1468},
+    hamilton:     {label:"Hamilton", vac:3.6, pb:1656, pbChg:1.6, cvac:1.2, condo:2831},
+    kitchener:    {label:"Kitchener–Cambridge–Waterloo", vac:4.1, pb:1832, pbChg:3.3, cvac:0.8, condo:2197},
+    london:       {label:"London", vac:4.0, pb:1651, pbChg:4.1, cvac:0.2, condo:2132},
+    halifax:      {label:"Halifax", vac:2.7, pb:1826, pbChg:6.7, cvac:2.5, condo:2465, turn:2058},
+    saskatoon:    {label:"Saskatoon", vac:3.3, pb:1548, pbChg:5.2, cvac:0.8, condo:1590},
+    regina:       {label:"Regina", vac:2.7, pb:1473, pbChg:4.2, cvac:1.3, condo:1460},
+    "quebec-city":{label:"Québec City", vac:2.4, pb:1277, pbChg:6.1, cvac:0.6, condo:1377},
+    gatineau:     {label:"Gatineau", vac:3.8, pb:1460, pbChg:4.7, cvac:1.0, condo:1578},
+    "st-catharines":{label:"St. Catharines–Niagara", vac:3.9, pb:1527, pbChg:5.5},
+    windsor:      {label:"Windsor", vac:3.7, pb:1454, pbChg:3.6}
+  };
+
+  function fmt(n){ return new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n); }
+
+  function update(){
+    var c = D[$('city').value]; if (!c) return;
+    var bedsF = parseFloat($('beds').value);
+    var type = $('type').value;
+    var base = (type === 'condo' && c.condo) ? c.condo : c.pb;
+
+    var est = base * bedsF;
+    if ($('parking').checked) est += 100;
+    if ($('laundry').checked) est += 50;
+    if ($('reno').checked) est = est * 1.06;
+    if ($('furn').checked) est = est * 1.18;
+
+    var lo = est * 0.94, hi = est * 1.06;
+    $('bigline').textContent = 'Fair range: ' + fmt(lo) + ' – ' + fmt(hi) + ' / month';
+
+    var vac = c.vac;
+    var mood = vac < 2 ? 'TIGHT market — compete to win the unit; expect little room to negotiate.'
+             : vac < 4 ? 'BALANCED market — negotiate; ask for the second year at the same rent.'
+             : 'RENTER\'S market — landlords are offering incentives (1–2 months free is common). Ask.';
+    $('context').textContent = c.label + ': purpose-built vacancy ' + vac + '% (CMHC Fall 2025) — ' + mood
+      + (c.turn ? ' New-tenant (turnover) 2-bed rent: ' + fmt(c.turn) + '.' : '');
+
+    $('pbv').textContent = fmt(c.pb) + (c.pbChg !== undefined ? '  (' + (c.pbChg === 0 ? 'flat' : '+' + c.pbChg + '%') + ' YoY)' : '');
+    $('condov').textContent = c.condo ? fmt(c.condo) : 'n/a';
+    $('turnv').textContent = c.turn ? fmt(c.turn) : 'n/a';
+    $('vacv').textContent = vac + '%';
+  }
+
+  function share(){
+    var p = new URLSearchParams();
+    p.set('city', $('city').value); p.set('beds', $('beds').value); p.set('t', $('type').value);
+    var url = location.origin + location.pathname + '?' + p.toString();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ $('copied').textContent = 'Copied. Send it to your landlord.'; });
+    } else { $('copied').textContent = url; }
+  }
+
+  ['city','beds','type','parking','laundry','reno','furn'].forEach(function(id){
+    $(id).addEventListener('input', update);
+    $(id).addEventListener('change', update);
+  });
+  $('share').addEventListener('click', share);
+
+  var q = new URLSearchParams(location.search);
+  if (q.get('city') && D[q.get('city')]) $('city').value = q.get('city');
+  if (q.get('beds')) $('beds').value = q.get('beds');
+  if (q.get('t')) $('type').value = q.get('t');
+
+  update();
+})();
+</script>
+</body>
+</html>

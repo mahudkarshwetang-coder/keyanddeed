@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[[NAME]] — real estate without the tolls</title>
+<meta name="description" content="Free prosumer tools for buying, selling, renting and rent-to-own across Canada. No fees until you win. Nothing hidden.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="theme-color" content="#0e1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="[[NAME]] — real estate without the tolls">
+<meta property="og:description" content="Free prosumer tools for buying, selling, renting and rent-to-own across Canada. No fees until you win. Nothing hidden.">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">[[NAME]]</a>
+    <nav>
+      <a href="tools/toll.html">Toll Calculator</a>
+      <a href="tools/coop-off.html">Co-op-Off</a>
+      <a href="tools/rent.html">Rent Estimator</a>
+      <a href="tools/rto.html">RTO Calculator</a>
+      <a href="tools/leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>The key. The deed.<br>Nothing in between.</h1>
+    <p class="sub">Free tools to price, negotiate, rent, and rent-to-own — across Canada.
+    We charge nothing until you win. No percentages. No paywalls. No hidden anything.</p>
+    <div class="waitlist" id="waitlist">
+      <p style="margin:0 0 12px"><strong>Early access</strong> — founding-member invite when we reach your city. No spam, one email when it matters (see our <a href="pages/privacy.html">privacy policy</a>).</p>
+      <form id="wlform" action="https://formsubmit.co/ajax/[[EMAIL]]" method="POST">
+        <div class="grid">
+          <div><label for="wl-email">Email</label><input id="wl-email" name="email" type="email" required placeholder="you@example.com"></div>
+          <div><label for="wl-city">City</label><input id="wl-city" name="city" type="text" placeholder="Toronto"></div>
+          <div><label for="wl-goal">What are you solving?</label>
+            <select id="wl-goal" name="goal">
+              <option>Buying</option>
+              <option>Selling</option>
+              <option>Renting out a property</option>
+              <option>Looking to rent</option>
+              <option>Rent-to-own</option>
+              <option>Commercial</option>
+            </select>
+          </div>
+        </div>
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="_subject" value="[[NAME]] waitlist signup">
+        <input type="hidden" name="_captcha" value="false">
+        <p style="margin:14px 0 0"><button type="submit" id="wlbtn">Join the waitlist</button> <span class="note" id="wlmsg" aria-live="polite"></span></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="tools">
+    <h2>Start with a number, not a salesperson</h2>
+    <div class="cards">
+      <a class="card" href="tools/toll.html"><h3>The Toll Calculator</h3><p>What commissions actually cost you — down to the dollar.</p></a>
+      <a class="card" href="tools/coop-off.html"><h3>Co-op-Off Calculator</h3><p>The unrepresented-buyer play: negotiate the commission off the price.</p></a>
+      <a class="card" href="tools/rent.html"><h3>Rent Estimator</h3><p>What's fair for this unit, in this market. Sources included.</p></a>
+      <a class="card" href="tools/rto.html"><h3>RTO vs Save-and-Wait</h3><p>The honest math on rent-to-own. Including the cost of failure.</p></a>
+      <a class="card" href="tools/leverage.html"><h3>Leverage Scorer</h3><p>How strong is your position? What to open at, and what to say.</p></a>
+    </div>
+  </section>
+
+  <section class="pages">
+    <a href="pages/open-book.html">The Open Book — our transparency doctrine</a>
+    <a href="pages/rto-charter.html">The RTO Charter — rent-to-own done right</a>
+    <a href="pages/fee-card.html">Fee card — success fees only</a>
+    <a href="pages/how-we-make-money.html">How we make money</a>
+  </section>
+</main>
+
+<footer class="site-footer wrap">
+  <p>Estimates, not appraisals. Tools, not advice. Every number cites its source.
+  Success fees only — we earn when you win. © [[YEAR]] [[NAME]]</p>
+<p class="legal legal-links"><a href="pages/privacy.html">Privacy</a> · <a href="pages/terms.html">Terms</a> · <a href="pages/accessibility.html">Accessibility</a></p>
+</footer>
+
+<script>
+(function(){
+  var f = document.getElementById('wlform');
+  if (!f) return;
+  var msg = document.getElementById('wlmsg'), btn = document.getElementById('wlbtn');
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    btn.disabled = true;
+    msg.textContent = 'Sending…';
+    fetch(f.action, { method: 'POST', body: new FormData(f), headers: { 'Accept': 'application/json' } })
+      .then(function(r){ return r.json().catch(function(){ return {}; }); })
+      .then(function(j){
+        if (j && (j.success === true || j.success === 'true')) {
+          f.reset();
+          btn.disabled = false;
+          msg.textContent = "You're in — welcome. We'll email you when we reach your city.";
+        } else { throw new Error('form not confirmed'); }
+      })
+      .catch(function(){
+        btn.disabled = false;
+        msg.innerHTML = "Couldn't reach the signup service right now — email <strong>[[EMAIL]]</strong> and we'll add you by hand.";
+      });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Co-op-Off Calculator — [[NAME]]</title>
+<meta name="description" content="The unrepresented-buyer play: negotiate the buyer-agent commission off the price. See the expected math — and the fine print nobody else shows.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#0e1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Co-op-Off Calculator — [[NAME]]">
+<meta property="og:description" content="The unrepresented-buyer play: negotiate the buyer-agent commission off the price. See the expected math — and the fine print nobody else shows.">
+<meta property="og:image" content="../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">[[NAME]]</a>
+    <nav>
+      <a href="toll.html">Toll Calculator</a>
+      <a href="coop-off.html">Co-op-Off</a>
+      <a href="rent.html">Rent Estimator</a>
+      <a href="rto.html">RTO Calculator</a>
+      <a href="leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>The Co-op-Off Calculator</h1>
+  <p class="lead">Sellers pay the buyer-agent commission out of their proceeds. If no buyer agent shows up, that money can be negotiated into the price instead. Here's the math — and the fine print nobody else shows you.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div><label for="price">Purchase price ($)</label><input id="price" type="number" value="1000000" min="50000" step="10000"></div>
+      <div><label for="coop">Buyer-agent commission in the listing (%)</label><input id="coop" type="number" value="2.5" step="0.1" min="0" max="5"></div>
+      <div><label for="flat">Our flat fee (fallback path, $)</label><input id="flat" type="number" value="999" step="100" min="0"></div>
+      <div><label for="play">Seller will play? <span id="playval" class="out">60%</span></label><input id="play" type="range" min="0" max="100" value="60" step="5" style="width:100%"></div>
+    </div>
+    <p class="note" style="margin-top:10px">"Will play" = your honest read on the seller accepting a price/credit reduction in exchange for no buyer-agent payout. Default 60% is a middle guess — adjust to your market.</p>
+  </section>
+
+  <section class="panel">
+    <div class="result-line" id="bigline" aria-live="polite">—</div>
+    <div class="grid">
+      <div><p class="note">A · Unrepresented — negotiate it off the price</p><div class="out" id="a">—</div><p class="note" id="an">—</p></div>
+      <div><p class="note">B · Flat-fee pro + rebate</p><div class="out" id="b">—</div><p class="note" id="bn">—</p></div>
+      <div><p class="note">C · Traditional agent</p><div class="out" id="c">—</div><p class="note" id="cn">You keep $0 in cash — you bought full representation at the market rate.</p></div>
+    </div>
+    <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">The fine print that matters ⚖️</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li><strong>You can't collect the commission yourself.</strong> In Ontario (TRESA), brokerage remuneration is paid under the seller's listing agreement — a self-represented buyer cannot receive it. What you <em>can</em> do is negotiate the saving into the price or a seller credit.</li>
+      <li><strong>It's a negotiation, not a right.</strong> Some sellers (and some listing brokers) won't play — outcomes vary by listing agreement, market heat, and how you frame it. That's why the slider exists.</li>
+      <li><strong>Fallback that always works:</strong> hire flat-fee licensed representation and take the co-op back as a rebate — contractual, no seller cooperation needed where a co-op was offered.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">Sources &amp; assumptions</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li>Buyer-agent co-op in Ontario: commonly 2.5% (negotiable; TRESA since 2023).</li>
+      <li>Path B assumes the seller's listing offered a co-op and we rebate the balance after our flat fee.</li>
+      <li>Estimates only — not an appraisal, not advice, not an offer of brokerage services. Every deal differs; that's the point of the slider.</li>
+    </ul>
+  </section>
+
+  <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  function fmt(n){ return new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n); }
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
+
+  function update(){
+    var price = num('price'), coop = num('coop')/100, flat = num('flat'), play = num('play')/100;
+    $('playval').textContent = Math.round(play*100) + '%';
+
+    var pool = price * coop;
+    var a = pool * play;                      // unrepresented: negotiate into price/credit
+    var b = Math.max(0, pool - flat);         // flat-fee rebate path (contractual where co-op offered)
+
+    $('a').textContent  = fmt(a);
+    $('b').textContent  = fmt(b);
+    $('c').textContent  = fmt(0);
+    $('an').textContent = 'Expected value at your slider setting (' + Math.round(play*100) + '% chance the seller plays). Range: $0 — ' + fmt(pool) + '.';
+    $('bn').textContent = 'Co-op pool ' + fmt(pool) + ' minus our flat fee — paid as a rebate at closing.';
+    $('bigline').textContent = 'Expected in your pocket (unrepresented path): ' + fmt(a) + ' — up to ' + fmt(pool) + ' if the seller plays ball.';
+  }
+
+  function shareLink(){
+    var p = new URLSearchParams();
+    p.set('p', $('price').value); p.set('c', $('coop').value); p.set('f', $('flat').value); p.set('s', $('play').value);
+    var url = location.origin + location.pathname + '?' + p.toString();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ $('copied').textContent = 'Copied. Send it to your agent.'; });
+    } else { $('copied').textContent = url; }
+  }
+
+  ['price','coop','flat','play'].forEach(function(id){
+    $(id).addEventListener('input', update);
+    $(id).addEventListener('change', update);
+  });
+  $('share').addEventListener('click', shareLink);
+
+  var q = new URLSearchParams(location.search);
+  if (q.get('p')) $('price').value = q.get('p');
+  if (q.get('c')) $('coop').value = q.get('c');
+  if (q.get('f')) $('flat').value = q.get('f');
+  if (q.get('s')) $('play').value = q.get('s');
+
+  update();
+})();
+</script>
+</body>
+</html>

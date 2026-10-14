@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Leverage Scorer — [[NAME]]</title>
+<meta name="description" content="How strong is your position as a buyer? Get a leverage score, an opening offer range, and the script to back it up.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#0e1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Leverage Scorer — [[NAME]]">
+<meta property="og:description" content="How strong is your position as a buyer? Get a leverage score, an opening offer range, and the script to back it up.">
+<meta property="og:image" content="../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">[[NAME]]</a>
+    <nav>
+      <a href="toll.html">Toll Calculator</a>
+      <a href="coop-off.html">Co-op-Off</a>
+      <a href="rent.html">Rent Estimator</a>
+      <a href="rto.html">RTO Calculator</a>
+      <a href="leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>The Leverage Scorer</h1>
+  <p class="lead">Negotiation is math plus nerve. This scores your position from public signals and your own prep — then hands you an opening number and the words. v1: rough, honest, and improving with real data.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div><label for="ask">Asking price ($)</label><input id="ask" type="number" value="800000" min="50000" step="10000"></div>
+      <div><label for="dom">Days on market</label><input id="dom" type="number" value="30" min="0" step="1"></div>
+      <div><label for="cuts">Price cuts since listing</label><input id="cuts" type="number" value="0" min="0" max="8" step="1"></div>
+      <div><label for="comp">Similar homes for sale nearby</label>
+        <select id="comp"><option value="0.15">Many — buyer's choice</option><option value="0.08" selected>Some</option><option value="0">Few / none</option></select>
+      </div>
+      <div><label for="temp">How's this pocket selling?</label>
+        <select id="temp"><option value="0.2">Cool — sitting, under-ask sales</option><option value="0.1" selected>Balanced</option><option value="0">Hot — over-ask, bidding</option></select>
+      </div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="fin" type="checkbox" checked style="width:auto"> Financing ready</label></div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="close" type="checkbox" checked style="width:auto"> Flexible closing date</label></div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="cond" type="checkbox" style="width:auto"> Can go in with few/no conditions</label></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="result-line" id="bigline" aria-live="polite">—</div>
+    <p class="note" id="scoreline">—</p>
+    <div class="grid">
+      <div><p class="note">Suggested opening offer</p><div class="out" id="open">—</div></div>
+      <div><p class="note">Your walk-way ceiling</p><div class="out" id="ceiling">—</div></div>
+    </div>
+    <p class="note" id="script" style="white-space:pre-wrap;border-top:1px solid var(--line);padding-top:12px;margin-top:14px">—</p>
+    <p style="margin-top:10px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">How the score works (v1)</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li>Days on market: +25 (&gt;60) · +15 (30–60) · +8 (14–30) · 0 (&lt;14)</li>
+      <li>Price cuts: +8 each, capped at +24 · Competition &amp; market temperature: up to +35 combined</li>
+      <li>Your prep: financing +10 · flexible closing +6 · condition-light +6</li>
+      <li>Opening offer starts at 0–2% under ask (score &lt;25) up to 7–12% under (score 65+); "walk-way ceiling" = full ask, because a number you overpay is worse than a deal you lose.</li>
+      <li>Estimates only — not advice. Real leverage depends on the seller's life story, which no calculator can see. This gets you in the room swinging.</li>
+    </ul>
+  </section>
+
+  <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  function fmt(n){ return new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n); }
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
+
+  function update(){
+    var ask = num('ask'), dom = num('dom'), cuts = Math.min(num('cuts'), 8);
+    var comp = parseFloat($('comp').value), temp = parseFloat($('temp').value);
+
+    var score = 0;
+    if (dom > 60) score += 25; else if (dom > 30) score += 15; else if (dom > 14) score += 8;
+    score += Math.min(cuts * 8, 24);
+    score += (comp + temp) * 100;
+    if ($('fin').checked) score += 10;
+    if ($('close').checked) score += 6;
+    if ($('cond').checked) score += 6;
+    score = Math.max(0, Math.min(100, Math.round(score)));
+
+    var lo, hi;
+    if (score < 25) { lo = 0; hi = 2; }
+    else if (score < 45) { lo = 2; hi = 4; }
+    else if (score < 65) { lo = 4; hi = 7; }
+    else { lo = 7; hi = 12; }
+
+    var openLo = ask * (1 - hi/100), openHi = ask * (1 - lo/100);
+    $('bigline').textContent = 'Leverage score: ' + score + ' / 100';
+    $('scoreline').textContent = 'Suggested opening range: ' + lo + '–' + hi + '% under ask.';
+    $('open').textContent = fmt(openLo) + ' – ' + fmt(openHi);
+    $('ceiling').textContent = fmt(ask) + ' (full ask — and only if the data supports it)';
+
+    var mood = temp === 0.2 ? 'a cool pocket' : (temp === 0.1 ? 'a balanced market' : 'a hot pocket');
+    var s = 'Hi — we\'ve been watching this one. It\'s at ' + dom + ' days on market' +
+            (cuts > 0 ? ' with ' + cuts + ' price adjustment' + (cuts > 1 ? 's' : '') : '') +
+            ', in ' + mood + '. We\'re ready to move: ' + ($('fin').checked ? 'financing is in place' : 'financing is underway') +
+            ($('close').checked ? ', and we can be flexible on the closing date' : '') +
+            ($('cond').checked ? ', and we can write a clean, condition-light offer' : '') + '. ' +
+            'Based on the comparables, we\'re opening at ' + fmt(openLo) + '–' + fmt(openHi) + '. Can we make that work?';
+    $('script').textContent = 'Your opening script:\n\n"' + s + '"';
+  }
+
+  function share(){
+    var p = new URLSearchParams();
+    p.set('a', $('ask').value); p.set('d', $('dom').value); p.set('c', $('cuts').value);
+    p.set('m', $('comp').value); p.set('t', $('temp').value);
+    p.set('f', $('fin').checked ? 1 : 0); p.set('cl', $('close').checked ? 1 : 0); p.set('cn', $('cond').checked ? 1 : 0);
+    var url = location.origin + location.pathname + '?' + p.toString();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ $('copied').textContent = 'Copied.'; });
+    } else { $('copied').textContent = url; }
+  }
+
+  ['ask','dom','cuts','comp','temp','fin','close','cond'].forEach(function(id){
+    $(id).addEventListener('input', update);
+    $(id).addEventListener('change', update);
+  });
+  $('share').addEventListener('click', share);
+
+  var q = new URLSearchParams(location.search);
+  if (q.get('a')) $('ask').value = q.get('a');
+  if (q.get('d')) $('dom').value = q.get('d');
+  if (q.get('c')) $('cuts').value = q.get('c');
+  if (q.get('m')) $('comp').value = q.get('m');
+  if (q.get('t')) $('temp').value = q.get('t');
+  if (q.get('f') === '0') $('fin').checked = false;
+  if (q.get('cl') === '0') $('close').checked = false;
+  if (q.get('cn') === '1') $('cond').checked = true;
+
+  update();
+})();
+</script>
+</body>
+</html>

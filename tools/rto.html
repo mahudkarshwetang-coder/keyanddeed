@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The RTO vs Save-and-Wait Calculator — [[NAME]]</title>
+<meta name="description" content="The honest math on rent-to-own: buyout price, credits, and what failure costs under a predatory contract vs the RTO Charter. Run any deal through it.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#0e1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The RTO vs Save-and-Wait Calculator — [[NAME]]">
+<meta property="og:description" content="The honest math on rent-to-own: buyout price, credits, and what failure costs under a predatory contract vs the RTO Charter. Run any deal through it.">
+<meta property="og:image" content="../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">[[NAME]]</a>
+    <nav>
+      <a href="toll.html">Toll Calculator</a>
+      <a href="coop-off.html">Co-op-Off</a>
+      <a href="rent.html">Rent Estimator</a>
+      <a href="rto.html">RTO Calculator</a>
+      <a href="leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>RTO vs Save-and-Wait</h1>
+  <p class="lead">The honest gate on rent-to-own: what you'd pay at buyout, how much of it your credits cover, and what <em>failure</em> costs under a predatory contract vs the <a href="../pages/rto-charter.html">RTO Charter</a>. If the math says wait, wait.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div><label for="price">Home price today ($)</label><input id="price" type="number" value="650000" min="50000" step="10000"></div>
+      <div><label for="esc">RTO option escalation (%/yr)</label><input id="esc" type="number" value="5" step="0.5" min="0" max="10"></div>
+      <div><label for="years">Term (years)</label><input id="years" type="number" value="3" min="1" max="7" step="1"></div>
+      <div><label for="dep">Initial deposit ($)</label><input id="dep" type="number" value="10000" step="1000" min="0"></div>
+      <div><label for="monthly">Monthly credits/savings ($)</label><input id="monthly" type="number" value="300" step="50" min="0"></div>
+      <div><label for="mkt">Market growth assumption (%/yr)</label><input id="mkt" type="number" value="3" step="0.5" min="-5" max="10"></div>
+      <div><label for="mode">If you don't complete, you lose…</label>
+        <select id="mode">
+          <option value="0.5" selected>50% of credits — Charter-compliant (capped + exit ramps)</option>
+          <option value="1">100% of credits — typical all-or-nothing contract</option>
+        </select>
+      </div>
+    </div>
+    <p class="note" style="margin-top:10px">Defaults reflect the market benchmark (a ~5%/yr locked escalation is common) and a neutral market guess. Change them — that's the point.</p>
+  </section>
+
+  <section class="panel">
+    <div class="result-line" id="bigline" aria-live="polite">—</div>
+    <p class="note" id="verdict">—</p>
+    <div class="grid">
+      <div><p class="note">Buyout price at end of term</p><div class="out" id="buyout">—</div></div>
+      <div><p class="note">Your total credits by then</p><div class="out" id="credits">—</div></div>
+      <div><p class="note">If it works: net cost basis</p><div class="out" id="works">—</div></div>
+      <div><p class="note">If it doesn't: money lost</p><div class="out" id="fails">—</div></div>
+      <div><p class="note">Wait &amp; save: market price at term</p><div class="out" id="waitpath">—</div></div>
+      <div><p class="note">Same savings, kept by you</p><div class="out" id="savedpath">—</div></div>
+    </div>
+    <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">The formulas (so you can audit us)</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li>Buyout = price × (1 + escalation)^years · Wait-path = price × (1 + market growth)^years</li>
+      <li>Credits = deposit + monthly × 12 × years (simple sum, no interest)</li>
+      <li>Net cost basis (if it works) = buyout − credits · Money lost (if it doesn't) = credits × your selected forfeiture %</li>
+      <li>Escalation benchmark: ~5%/yr locked buyback (common in Canadian RTO programs, Fall 2026). Charter mode = capped forfeiture with exit ramps.</li>
+      <li>Estimates only — not advice; every contract differs. Get independent legal advice; the Charter requires it anyway.</li>
+    </ul>
+  </section>
+
+  <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  function fmt(n){ return new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n); }
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
+
+  function update(){
+    var price = num('price'), esc = num('esc')/100, years = num('years'),
+        dep = num('dep'), monthly = num('monthly'), mkt = num('mkt')/100, mode = parseFloat($('mode').value);
+
+    var buyout = price * Math.pow(1+esc, years);
+    var market = price * Math.pow(1+mkt, years);
+    var credits = dep + monthly*12*years;
+    var works = buyout - credits;
+    var lost = credits * mode;
+
+    $('buyout').textContent = fmt(buyout);
+    $('credits').textContent = fmt(credits);
+    $('works').textContent = fmt(works);
+    $('fails').textContent = fmt(lost) + '  (' + Math.round(mode*100) + '% forfeited)';
+    $('waitpath').textContent = fmt(market);
+    $('savedpath').textContent = fmt(credits) + ' kept';
+
+    $('bigline').textContent = 'Buyout in ' + years + ' yrs: ' + fmt(buyout) + ' · Market path: ' + fmt(market);
+
+    var gap = buyout - market;
+    var v;
+    if (gap > price*0.05) {
+      v = 'Verdict: the locked escalation (' + (esc*100).toFixed(1) + '%/yr) outruns the market assumption (' + (mkt*100).toFixed(1) + '%/yr) by ' + fmt(gap) + ' — this RTO is priced against you unless you expect prices to run.';
+    } else if (gap < -price*0.05) {
+      v = 'Verdict: the locked price may beat the market path by ' + fmt(-gap) + ' — you are pre-buying appreciation you would not otherwise capture.';
+    } else {
+      v = 'Verdict: roughly a wash versus the market path (' + fmt(Math.abs(gap)) + ' apart) — decide on terms, credits, and whether the Charter protects your exit.';
+    }
+    if (mode === 1) v += ' And note the forfeiture: an all-or-nothing clause risks ' + fmt(credits) + ' of your money.';
+    $('verdict').textContent = v;
+  }
+
+  function share(){
+    var p = new URLSearchParams();
+    p.set('p', $('price').value); p.set('e', $('esc').value); p.set('y', $('years').value);
+    p.set('d', $('dep').value); p.set('m', $('monthly').value); p.set('g', $('mkt').value); p.set('f', $('mode').value);
+    var url = location.origin + location.pathname + '?' + p.toString();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ $('copied').textContent = 'Copied.'; });
+    } else { $('copied').textContent = url; }
+  }
+
+  ['price','esc','years','dep','monthly','mkt','mode'].forEach(function(id){
+    $(id).addEventListener('input', update);
+    $(id).addEventListener('change', update);
+  });
+  $('share').addEventListener('click', share);
+
+  var q = new URLSearchParams(location.search);
+  if (q.get('p')) $('price').value = q.get('p');
+  if (q.get('e')) $('esc').value = q.get('e');
+  if (q.get('y')) $('years').value = q.get('y');
+  if (q.get('d')) $('dep').value = q.get('d');
+  if (q.get('m')) $('monthly').value = q.get('m');
+  if (q.get('g')) $('mkt').value = q.get('g');
+  if (q.get('f')) $('mode').value = q.get('f');
+
+  update();
+})();
+</script>
+</body>
+</html>

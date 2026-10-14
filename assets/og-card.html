@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>[[NAME]] — social card (source for assets/og.png)</title>
+<style>
+  /* 1200x630 social card. Regenerate og.png after brand lock:
+     msedge --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=1500 \
+       --window-size=1200,630 --screenshot=assets/og.png assets/og-card.html */
+  *{box-sizing:border-box;margin:0}
+  body{width:1200px;height:630px;background:#0e1116;color:#f7f6f2;
+    font:16px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex;flex-direction:column;justify-content:center;padding:84px 90px;overflow:hidden}
+  .kicker{color:#0b6b3a;font-weight:800;letter-spacing:.14em;font-size:19px;text-transform:uppercase;margin-bottom:26px}
+  h1{font-size:74px;line-height:1.03;letter-spacing:-.02em;font-weight:800;max-width:980px}
+  h1 span{color:#0b6b3a}
+  .sub{color:#a9b0ba;font-size:27px;margin-top:30px;max-width:900px}
+  .foot{margin-top:56px;display:flex;justify-content:space-between;align-items:center;color:#a9b0ba;font-size:22px}
+  .badge{border:1px solid #2a2f38;border-radius:999px;padding:10px 22px;color:#f7f6f2}
+</style>
+</head>
+<body>
+  <div class="kicker">The key. The deed. Nothing in between.</div>
+  <h1>[[NAME]]<br><span>Real estate without the tolls.</span></h1>
+  <p class="sub">Free tools for buying, selling, renting &amp; rent-to-own — across Canada. Success fees only: $0 until you win.</p>
+  <div class="foot"><span>[[DOMAIN]]</span><span class="badge">Nothing hidden, ever</span></div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Toll Calculator — [[NAME]]</title>
+<meta name="description" content="What real estate commissions actually cost you — in dollars. Free, no signup. Success fees only: we charge nothing until you win.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#0e1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Toll Calculator — [[NAME]]">
+<meta property="og:description" content="What real estate commissions actually cost you — in dollars. Free, no signup. Success fees only: we charge nothing until you win.">
+<meta property="og:image" content="../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">[[NAME]]</a>
+    <nav>
+      <a href="toll.html">Toll Calculator</a>
+      <a href="coop-off.html">Co-op-Off</a>
+      <a href="rent.html">Rent Estimator</a>
+      <a href="rto.html">RTO Calculator</a>
+      <a href="leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>The Toll Calculator</h1>
+  <p class="lead">What commissions actually cost — down to the dollar. Set your price, see the toll, and see what keeping it looks like.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div><label for="price">Purchase price ($)</label><input id="price" type="number" value="1000000" min="50000" step="10000"></div>
+      <div><label for="list">Listing-side commission (%)</label><input id="list" type="number" value="2.5" step="0.1" min="0" max="10"></div>
+      <div><label for="coop">Buyer-side (co-op) commission (%)</label><input id="coop" type="number" value="2.5" step="0.1" min="0" max="10"></div>
+      <div><label for="prov">Province (HST rate)</label>
+        <select id="prov">
+          <option value="ON" selected>Ontario — 13%</option>
+          <option value="BC">British Columbia — 12%</option>
+          <option value="AB">Alberta — 5%</option>
+          <option value="SK">Saskatchewan — 11%</option>
+          <option value="MB">Manitoba — 12%</option>
+          <option value="QC">Quebec — 14.975%</option>
+          <option value="NS">Nova Scotia — 15%</option>
+          <option value="NB">New Brunswick — 15%</option>
+          <option value="PE">PEI — 15%</option>
+          <option value="NL">Newfoundland & Labrador — 15%</option>
+        </select>
+      </div>
+      <div><label for="ourfee">Our flat success fee ($)</label><input id="ourfee" type="number" value="1999" step="100" min="0"></div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="hst" type="checkbox" checked style="width:auto"> Apply HST to commissions</label></div>
+    </div>
+    <p class="note" style="margin-top:10px">Typical Ontario: 2.5% + 2.5%, plus 13% HST ≈ <strong>5.65% all-in</strong>. Commissions are always negotiable (TRESA, since 2023).</p>
+  </section>
+
+  <section class="panel">
+    <div class="result-line" id="total" aria-live="polite">—</div>
+    <div class="grid">
+      <div><p class="note">Commission — both sides</p><div class="out" id="comm">—</div></div>
+      <div><p class="note">HST on commissions</p><div class="out" id="taxline">—</div></div>
+      <div><p class="note">Our fee — only if you win</p><div class="out" id="our">—</div></div>
+      <div><p class="note">You keep</p><div class="out" id="save">—</div></div>
+    </div>
+    <p class="note" id="equiv"></p>
+    <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">Sources &amp; assumptions</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li>Ontario commission norms: commonly 3.5–5% + 13% HST (Rocket Advance, Apr 2026); HST varies by province.</li>
+      <li>Rent equivalence: CMHC Fall 2025 average turnover 2-bedroom rent, Toronto (~$2,540/mo).</li>
+      <li>Estimates only — <em>not an appraisal, not advice, not an offer of brokerage services</em>. Your numbers may differ; that's why it's a calculator.</li>
+    </ul>
+  </section>
+
+  <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var HST = {ON:0.13, BC:0.12, AB:0.05, SK:0.11, MB:0.12, QC:0.14975, NS:0.15, NB:0.15, PE:0.15, NL:0.15};
+  var TORONTO_RENT_2BR = 2540;
+
+  function fmt(n){ return new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n); }
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
+
+  function update(){
+    var price = num('price'), list = num('list')/100, coop = num('coop')/100;
+    var prov = $('prov').value, tax = HST[prov] || 0.13, applyTax = $('hst').checked;
+    var ourFee = num('ourfee');
+
+    var comm = price * (list + coop);
+    var taxAmt = applyTax ? comm * tax : 0;
+    var total = comm + taxAmt;
+    var keep = total - ourFee;
+
+    $('comm').textContent = fmt(comm);
+    $('taxline').textContent = fmt(taxAmt);
+    $('our').textContent = fmt(ourFee);
+    $('save').textContent = fmt(keep);
+    $('total').textContent = 'The toll: ' + fmt(total) + ' — you keep ' + fmt(keep);
+
+    var downPct = price * 0.2;
+    var equiv = '≈ ' + Math.max(0, Math.round(keep/downPct*100)) + '% of a 20% down payment on this home'
+              + ' · ≈ ' + Math.max(0, Math.round(keep/TORONTO_RENT_2BR)) + ' months of Toronto rent (CMHC Fall 2025)';
+    $('equiv').textContent = equiv;
+  }
+
+  function shareLink(){
+    var p = new URLSearchParams();
+    p.set('p', $('price').value); p.set('l', $('list').value); p.set('c', $('coop').value);
+    p.set('pr', $('prov').value); p.set('f', $('ourfee').value); p.set('h', $('hst').checked ? '1':'0');
+    var url = location.origin + location.pathname + '?' + p.toString();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ $('copied').textContent = 'Copied. Send it to your agent.'; });
+    } else { $('copied').textContent = url; }
+  }
+
+  ['price','list','coop','prov','ourfee','hst'].forEach(function(id){
+    $(id).addEventListener('input', update);
+    $(id).addEventListener('change', update);
+  });
+  $('share').addEventListener('click', shareLink);
+
+  var q = new URLSearchParams(location.search);
+  if (q.get('p')) $('price').value = q.get('p');
+  if (q.get('l')) $('list').value = q.get('l');
+  if (q.get('c')) $('coop').value = q.get('c');
+  if (q.get('pr')) $('prov').value = q.get('pr');
+  if (q.get('f')) $('ourfee').value = q.get('f');
+  if (q.get('h') === '0') $('hst').checked = false;
+
+  update();
+})();
+</script>
+</body>
+</html>

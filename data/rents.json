@@ -1,0 +1,28 @@
+{
+  "source": {
+    "name": "CMHC Rental Market Report, Fall 2025 (Rental Market Survey, October 2025)",
+    "citation": "Source: CMHC, Rental Market Report, Fall 2025",
+    "note": "Purpose-built = privately initiated rental apartments (3+ units), average rent paid by all tenants, 2-bedroom. Condo = Condominium Apartment Survey, average rent 2-bedroom. Turnover = average rent paid by NEW tenants (2-bedroom). Vacancy = purpose-built unless marked condo."
+  },
+  "national": {"vac": 3.1, "pb2br": 1550, "pbChg": 5.1, "condoVac": 1.3, "condo2br": 2305},
+  "cmas": {
+    "toronto":        {"label": "Toronto (GTA)",              "vac": 3.0, "pb": 2034, "pbChg": 3.5, "condoVac": 1.0, "condo": 2904, "turn": 2547},
+    "vancouver":      {"label": "Vancouver",                  "vac": 3.7, "pb": 2363, "pbChg": 2.2, "condoVac": 1.5, "condo": 2900, "turn": 2696},
+    "victoria":       {"label": "Victoria",                   "vac": 3.3, "pb": 2120, "pbChg": 5.1, "condoVac": 0.3, "condo": 2688},
+    "calgary":        {"label": "Calgary",                    "vac": 5.0, "pb": 1914, "pbChg": 0.0, "condoVac": 2.2, "condo": 2030, "turn": 1836},
+    "edmonton":       {"label": "Edmonton",                   "vac": 3.8, "pb": 1603, "pbChg": 3.5, "condoVac": 1.7, "condo": 1655, "turn": 1600},
+    "ottawa":         {"label": "Ottawa",                     "vac": 3.0, "pb": 1926, "pbChg": 3.4, "condoVac": 0.6, "condo": 2503, "turn": 2155},
+    "montreal":       {"label": "Montréal",                   "vac": 2.9, "pb": 1346, "pbChg": 7.2, "condoVac": 2.1, "condo": 1826, "turn": 1644},
+    "winnipeg":       {"label": "Winnipeg",                   "vac": 2.8, "pb": 1571, "pbChg": 1.9, "condoVac": 1.1, "condo": 1468},
+    "hamilton":       {"label": "Hamilton",                   "vac": 3.6, "pb": 1656, "pbChg": 1.6, "condoVac": 1.2, "condo": 2831},
+    "kitchener":      {"label": "Kitchener–Cambridge–Waterloo", "vac": 4.1, "pb": 1832, "pbChg": 3.3, "condoVac": 0.8, "condo": 2197},
+    "london":         {"label": "London",                     "vac": 4.0, "pb": 1651, "pbChg": 4.1, "condoVac": 0.2, "condo": 2132},
+    "halifax":        {"label": "Halifax",                    "vac": 2.7, "pb": 1826, "pbChg": 6.7, "condoVac": 2.5, "condo": 2465, "turn": 2058},
+    "saskatoon":      {"label": "Saskatoon",                  "vac": 3.3, "pb": 1548, "pbChg": 5.2, "condoVac": 0.8, "condo": 1590},
+    "regina":         {"label": "Regina",                     "vac": 2.7, "pb": 1473, "pbChg": 4.2, "condoVac": 1.3, "condo": 1460},
+    "quebec-city":    {"label": "Québec City",                "vac": 2.4, "pb": 1277, "pbChg": 6.1, "condoVac": 0.6, "condo": 1377},
+    "gatineau":       {"label": "Gatineau",                   "vac": 3.8, "pb": 1460, "pbChg": 4.7, "condoVac": 1.0, "condo": 1578},
+    "st-catharines":  {"label": "St. Catharines–Niagara",     "vac": 3.9, "pb": 1527, "pbChg": 5.5},
+    "windsor":        {"label": "Windsor",                    "vac": 3.7, "pb": 1454, "pbChg": 3.6}
+  }
+}
