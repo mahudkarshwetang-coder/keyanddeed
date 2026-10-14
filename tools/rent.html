@@ -22,7 +22,7 @@
     <nav>
       <a href="toll.html">Toll Calculator</a>
       <a href="coop-off.html">Co-op-Off</a>
-      <a href="rent.html">Rent Estimator</a>
+      <a href="rent.html" class="active" aria-current="page">Rent Estimator</a>
       <a href="rto.html">RTO Calculator</a>
       <a href="leverage.html">Leverage</a>
     </nav>
@@ -87,6 +87,7 @@
       <div><p class="note">Turnover rent (new tenants, 2-bed)</p><div class="out" id="turnv">—</div></div>
       <div><p class="note">Purpose-built vacancy</p><div class="out" id="vacv">—</div></div>
     </div>
+    <div class="meters" id="meters" aria-hidden="true"></div>
     <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
   </section>
 
@@ -98,6 +99,17 @@
       <li>Estimates only — <em>not an appraisal, not advice</em>. Every building differs; treat this as your opening number, not gospel.</li>
     </ul>
   </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What next?</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>Thinking about buying instead?</strong> Run the honest rent-to-own math in the <a href="rto.html">RTO Calculator</a> before you sign anything.</li>
+      <li><strong>Renting out a property?</strong> The <a href="../pages/fee-card.html">Fee Card</a> shows what we charge — nothing until a tenant is placed.</li>
+      <li><strong>Want the full Terminal?</strong> <a href="../index.html#waitlist">Join the founding-member list</a> — free tools, success fees only, no spam.</li>
+    </ul>
+  </section>
+
+  <p class="note">Spotted a wrong number? <a href="mailto:[[EMAIL]]">Tell us</a> — corrections jump the queue.</p>
 
   <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
 </footer>
@@ -156,6 +168,16 @@
     $('condov').textContent = c.condo ? fmt(c.condo) : 'n/a';
     $('turnv').textContent = c.turn ? fmt(c.turn) : 'n/a';
     $('vacv').textContent = vac + '%';
+
+    var mrow = function(label, v, max, cls){
+      var w = v > 0 ? Math.max(1.6, Math.min(100, v / max * 100)) : 0;
+      return '<div class="meter-row"><span>' + label + '</span><span class="meter ' + cls + '"><i style="width:' + w + '%"></i></span><span class="val">' + fmt(v) + '</span></div>';
+    };
+    var mrent = Math.max(c.pb, c.condo || 0, c.turn || 0, 1);
+    var mrows = mrow('Purpose-built', c.pb, mrent, 'grey');
+    if (c.condo) { mrows += mrow('Condo', c.condo, mrent, 'grey'); }
+    if (c.turn) { mrows += mrow('Turnover', c.turn, mrent, ''); }
+    $('meters').innerHTML = mrows;
   }
 
   function share(){

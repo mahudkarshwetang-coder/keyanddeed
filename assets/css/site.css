@@ -18,6 +18,7 @@ a:hover{color:var(--accent)}
 .site-header nav{display:flex;gap:14px;flex-wrap:wrap}
 .site-header nav a{text-decoration:none;font-size:14px;color:var(--muted)}
 .site-header nav a:hover{color:var(--ink)}
+.site-header nav a.active{color:var(--ink);font-weight:700}
 
 .hero{padding:56px 0 28px}
 .hero h1{font-size:clamp(30px,6vw,52px);line-height:1.06;margin:0 0 14px;letter-spacing:-.02em}
@@ -50,6 +51,12 @@ input[type=number],input[type=text],input[type=email],select{width:100%;padding:
 .out{font-variant-numeric:tabular-nums}
 .result-line{font-size:clamp(20px,3.5vw,28px);font-weight:800;letter-spacing:-.01em;margin:10px 0}
 .note{font-size:13px;color:var(--muted)}
+.meters{display:grid;gap:8px;margin:14px 0 4px}
+.meter-row{display:grid;grid-template-columns:96px 1fr 76px;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.meter-row .val{text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+.meter{height:10px;background:#eceae3;border-radius:999px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .25s ease}
+.meter.grey i{background:#b9bec7}
 button{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer}
 button:hover{filter:brightness(1.06)}
 .disclaimer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);margin-top:24px;padding-top:12px}

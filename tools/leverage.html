@@ -24,7 +24,7 @@
       <a href="coop-off.html">Co-op-Off</a>
       <a href="rent.html">Rent Estimator</a>
       <a href="rto.html">RTO Calculator</a>
-      <a href="leverage.html">Leverage</a>
+      <a href="leverage.html" class="active" aria-current="page">Leverage</a>
     </nav>
   </div>
 </header>
@@ -58,6 +58,7 @@
       <div><p class="note">Your walk-way ceiling</p><div class="out" id="ceiling">—</div></div>
     </div>
     <p class="note" id="script" style="white-space:pre-wrap;border-top:1px solid var(--line);padding-top:12px;margin-top:14px">—</p>
+    <div class="meters" id="meters" aria-hidden="true"></div>
     <p style="margin-top:10px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
   </section>
 
@@ -71,6 +72,16 @@
       <li>Estimates only — not advice. Real leverage depends on the seller's life story, which no calculator can see. This gets you in the room swinging.</li>
     </ul>
   </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What next?</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>Ready to make the offer?</strong> Plan the ask with the <a href="coop-off.html">Co-op-Off Calculator</a> and the <a href="../pages/coop-playbook.html">Playbook</a>.</li>
+      <li><strong>Want the full Terminal?</strong> <a href="../index.html#waitlist">Join the founding-member list</a> — free tools, success fees only, no spam.</li>
+    </ul>
+  </section>
+
+  <p class="note">Spotted a wrong number? <a href="mailto:[[EMAIL]]">Tell us</a> — corrections jump the queue.</p>
 
   <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
 </footer>
@@ -106,6 +117,9 @@
     $('scoreline').textContent = 'Suggested opening range: ' + lo + '–' + hi + '% under ask.';
     $('open').textContent = fmt(openLo) + ' – ' + fmt(openHi);
     $('ceiling').textContent = fmt(ask) + ' (full ask — and only if the data supports it)';
+
+    var mw = Math.max(2, Math.min(100, score));
+    $('meters').innerHTML = '<div class="meter-row"><span>Score</span><span class="meter"><i style="width:' + mw + '%"></i></span><span class="val">' + score + ' / 100</span></div>';
 
     var mood = temp === 0.2 ? 'a cool pocket' : (temp === 0.1 ? 'a balanced market' : 'a hot pocket');
     var s = 'Hi — we\'ve been watching this one. It\'s at ' + dom + ' days on market' +

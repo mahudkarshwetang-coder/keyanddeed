@@ -21,7 +21,7 @@
     <a class="brand" href="../index.html">[[NAME]]</a>
     <nav>
       <a href="toll.html">Toll Calculator</a>
-      <a href="coop-off.html">Co-op-Off</a>
+      <a href="coop-off.html" class="active" aria-current="page">Co-op-Off</a>
       <a href="rent.html">Rent Estimator</a>
       <a href="rto.html">RTO Calculator</a>
       <a href="leverage.html">Leverage</a>
@@ -50,6 +50,7 @@
       <div><p class="note">B · Flat-fee pro + rebate</p><div class="out" id="b">—</div><p class="note" id="bn">—</p></div>
       <div><p class="note">C · Traditional agent</p><div class="out" id="c">—</div><p class="note" id="cn">You keep $0 in cash — you bought full representation at the market rate.</p></div>
     </div>
+    <div class="meters" id="meters" aria-hidden="true"></div>
     <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
   </section>
 
@@ -71,6 +72,17 @@
       <li>Estimates only — not an appraisal, not advice, not an offer of brokerage services. Every deal differs; that's the point of the slider.</li>
     </ul>
   </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What next?</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>New here?</strong> Run the <a href="toll.html">Toll Calculator</a> first — it shows what the co-op is worth in context.</li>
+      <li><strong>Before you make the ask:</strong> score your position with the <a href="leverage.html">Leverage Scorer</a>.</li>
+      <li><strong>Want the full Terminal?</strong> <a href="../index.html#waitlist">Join the founding-member list</a> — free tools, success fees only, no spam.</li>
+    </ul>
+  </section>
+
+  <p class="note">Spotted a wrong number? <a href="mailto:[[EMAIL]]">Tell us</a> — corrections jump the queue.</p>
 
   <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
 </footer>
@@ -96,6 +108,16 @@
     $('an').textContent = 'Expected value at your slider setting (' + Math.round(play*100) + '% chance the seller plays). Range: $0 — ' + fmt(pool) + '.';
     $('bn').textContent = 'Co-op pool ' + fmt(pool) + ' minus our flat fee — paid as a rebate at closing.';
     $('bigline').textContent = 'Expected in your pocket (unrepresented path): ' + fmt(a) + ' — up to ' + fmt(pool) + ' if the seller plays ball.';
+
+    var mrow = function(label, v, max, cls){
+      var w = v > 0 ? Math.max(1.6, Math.min(100, v / max * 100)) : 0;
+      return '<div class="meter-row"><span>' + label + '</span><span class="meter ' + cls + '"><i style="width:' + w + '%"></i></span><span class="val">' + fmt(v) + '</span></div>';
+    };
+    var mpool = Math.max(pool, 1);
+    $('meters').innerHTML =
+      mrow('Co-op pool', pool, mpool, 'grey') +
+      mrow('Path A — expected', a, mpool, '') +
+      mrow('Path B — rebate', b, mpool, '');
   }
 
   function shareLink(){

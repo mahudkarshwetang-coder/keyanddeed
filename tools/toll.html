@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="../index.html">[[NAME]]</a>
     <nav>
-      <a href="toll.html">Toll Calculator</a>
+      <a href="toll.html" class="active" aria-current="page">Toll Calculator</a>
       <a href="coop-off.html">Co-op-Off</a>
       <a href="rent.html">Rent Estimator</a>
       <a href="rto.html">RTO Calculator</a>
@@ -67,6 +67,7 @@
       <div><p class="note">You keep</p><div class="out" id="save">—</div></div>
     </div>
     <p class="note" id="equiv"></p>
+    <div class="meters" id="meters" aria-hidden="true"></div>
     <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
   </section>
 
@@ -78,6 +79,17 @@
       <li>Estimates only — <em>not an appraisal, not advice, not an offer of brokerage services</em>. Your numbers may differ; that's why it's a calculator.</li>
     </ul>
   </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What next?</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>Now negotiate it off, instead of just counting it:</strong> run the <a href="coop-off.html">Co-op-Off Calculator</a> — or the step-by-step <a href="../pages/coop-playbook.html">Playbook</a>.</li>
+      <li><strong>Getting ready to buy?</strong> Score your position with the <a href="leverage.html">Leverage Scorer</a> first.</li>
+      <li><strong>Want the full Terminal?</strong> <a href="../index.html#waitlist">Join the founding-member list</a> — free tools, success fees only, no spam.</li>
+    </ul>
+  </section>
+
+  <p class="note">Spotted a wrong number? <a href="mailto:[[EMAIL]]">Tell us</a> — corrections jump the queue.</p>
 
   <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
 </footer>
@@ -112,6 +124,15 @@
     var equiv = '≈ ' + Math.max(0, Math.round(keep/downPct*100)) + '% of a 20% down payment on this home'
               + ' · ≈ ' + Math.max(0, Math.round(keep/TORONTO_RENT_2BR)) + ' months of Toronto rent (CMHC Fall 2025)';
     $('equiv').textContent = equiv;
+
+    var mrow = function(label, v, max, cls){
+      var w = v > 0 ? Math.max(1.6, Math.min(100, v / max * 100)) : 0;
+      return '<div class="meter-row"><span>' + label + '</span><span class="meter ' + cls + '"><i style="width:' + w + '%"></i></span><span class="val">' + fmt(v) + '</span></div>';
+    };
+    var mtoll = Math.max(total, 1);
+    $('meters').innerHTML =
+      mrow('Commission toll', total, mtoll, 'grey') +
+      mrow('Our fee', ourFee, mtoll, '');
   }
 
   function shareLink(){

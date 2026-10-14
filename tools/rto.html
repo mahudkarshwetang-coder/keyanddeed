@@ -23,7 +23,7 @@
       <a href="toll.html">Toll Calculator</a>
       <a href="coop-off.html">Co-op-Off</a>
       <a href="rent.html">Rent Estimator</a>
-      <a href="rto.html">RTO Calculator</a>
+      <a href="rto.html" class="active" aria-current="page">RTO Calculator</a>
       <a href="leverage.html">Leverage</a>
     </nav>
   </div>
@@ -62,6 +62,7 @@
       <div><p class="note">Wait &amp; save: market price at term</p><div class="out" id="waitpath">—</div></div>
       <div><p class="note">Same savings, kept by you</p><div class="out" id="savedpath">—</div></div>
     </div>
+    <div class="meters" id="meters" aria-hidden="true"></div>
     <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
   </section>
 
@@ -75,6 +76,17 @@
       <li>Estimates only — not advice; every contract differs. Get independent legal advice; the Charter requires it anyway.</li>
     </ul>
   </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What next?</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>Check fair rent in your city first</strong> with the <a href="rent.html">Rent Estimator</a> — it's the number this whole play competes against.</li>
+      <li><strong>Buying directly instead?</strong> See <a href="coop-off.html">Co-op-Off</a> + the <a href="../pages/coop-playbook.html">Playbook</a>.</li>
+      <li><strong>Want the full Terminal?</strong> <a href="../index.html#waitlist">Join the founding-member list</a> — free tools, success fees only, no spam.</li>
+    </ul>
+  </section>
+
+  <p class="note">Spotted a wrong number? <a href="mailto:[[EMAIL]]">Tell us</a> — corrections jump the queue.</p>
 
   <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
 </footer>
@@ -116,6 +128,16 @@
     }
     if (mode === 1) v += ' And note the forfeiture: an all-or-nothing clause risks ' + fmt(credits) + ' of your money.';
     $('verdict').textContent = v;
+
+    var mrow = function(label, v, max, cls){
+      var w = v > 0 ? Math.max(1.6, Math.min(100, v / max * 100)) : 0;
+      return '<div class="meter-row"><span>' + label + '</span><span class="meter ' + cls + '"><i style="width:' + w + '%"></i></span><span class="val">' + fmt(v) + '</span></div>';
+    };
+    var mrt = Math.max(buyout, market, 1);
+    $('meters').innerHTML =
+      mrow('Buyout', buyout, mrt, 'grey') +
+      mrow('Market path', market, mrt, 'grey') +
+      mrow('Credits', credits, mrt, '');
   }
 
   function share(){
