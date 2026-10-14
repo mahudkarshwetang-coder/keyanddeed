@@ -16,8 +16,9 @@ The free prosumer toolkit — landing + 4 calculators + charter pages + waitlist
   - `data/rents.json`, `data/fees.json`, `data/cities.json`
 - Hosting: GitHub Pages or Cloudflare Pages (deploy when brand+domain lock). **No analytics v1** (privacy); add privacy-friendly later.
 
-## Waitlist
-- Embed **Tally.so** form (free) → export emails; fallback Formspree. Fields: email, city, "what are you solving?" dropdown (buy/sell/rent/RTO/commercial).
+## Waitlist (decided: FormSubmit — zero-account)
+- Live on the landing page: posts to `formsubmit.co/ajax/[[EMAIL]]`, AJAX with graceful mailto fallback. **Activation:** one confirmation click (emailed after the domain email exists). Tally.so remains the fallback option.
+- Fields: email, city, "what are you solving?" dropdown (buy/sell/rent/RTO/commercial). Honeypot + `_captcha=false` included.
 
 ## Tools — v1 scope & build order
 
@@ -72,3 +73,11 @@ The free prosumer toolkit — landing + 4 calculators + charter pages + waitlist
 - **Brand/name lock** (see `brand.md`) → domain → deploy.
 - Playbook page copy (write alongside co-op tool).
 - CIPO trademark clearance before public launch (legal step).
+
+## Build status — Oct 14, 2026 (verified)
+- ✅ All 5 tools + 4 doctrine pages + 3 legal pages + waitlist + 404/robots/sitemap/favicon/og.png built.
+- ✅ `node tests/smoke.mjs` → 68/68 checks; live server → 20/20 URLs HTTP 200; true-390px/360px + desktop layout QA clean.
+- ✅ Git repo initialized (`main`); `scripts/finalize.py` + `scripts/inject_meta.py` ready for brand lock.
+- ⏳ Human steps: domains → `finalize.py` → og.png regen → FormSubmit activation (1 click) → deploy → socials (guided).
+- Next: CIPO trademark, independent a11y audit, then **partner-brokerage outreach** (the licensed envelope).
+- QA gotcha: headless Edge on Windows clamps window width (~500px min) then crops — never judge mobile from `--window-size` screenshots; use an iframe/emulation harness.

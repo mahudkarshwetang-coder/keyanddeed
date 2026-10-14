@@ -59,12 +59,23 @@ def main() -> None:
                 f'<meta name="theme-color" content="#0e1116">\n'
                 f'<meta property="og:type" content="website">\n'
                 f'<meta property="og:title" content="{title}">\n'
+                f'<meta property="og:url" content="https://[[DOMAIN]]/{"" if page == "index.html" else page}">\n'
                 f'<meta property="og:description" content="{desc}">\n'
-                f'<meta property="og:image" content="{pre}assets/og.png">\n'
+                f'<meta property="og:image" content="https://[[DOMAIN]]/assets/og.png">\n'
                 f'<meta name="twitter:card" content="summary_large_image">\n'
             )
             html = re.sub(
                 r'(<meta name="description"[^>]*>)\n', r"\1\n" + block, html, count=1
+            )
+
+        # upgrade pass (idempotent): absolute og:image + og:url on already-injected pages
+        html = re.sub(r'content="(?:\.\./|)assets/og\.png"', 'content="https://[[DOMAIN]]/assets/og.png"', html)
+        if 'og:url' not in html:
+            url_path = '' if page == 'index.html' else page
+            html = re.sub(
+                r'(<meta property="og:title"[^>]*>)',
+                r'\1' + '\n' + f'<meta property="og:url" content="https://[[DOMAIN]]/{url_path}">',
+                html, count=1,
             )
 
         html = re.sub(
