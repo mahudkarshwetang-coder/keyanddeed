@@ -18,7 +18,7 @@ PAGES = [
     "index.html", "404.html",
     "tools/toll.html", "tools/coop-off.html", "tools/rent.html",
     "tools/rto.html", "tools/leverage.html",
-    "pages/open-book.html", "pages/rto-charter.html", "pages/fee-card.html",
+    "pages/receipts.html", "pages/open-book.html", "pages/rto-charter.html", "pages/fee-card.html",
     "pages/how-we-make-money.html", "pages/coop-playbook.html", "pages/privacy.html",
     "pages/terms.html", "pages/accessibility.html",
 ]

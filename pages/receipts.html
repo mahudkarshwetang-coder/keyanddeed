@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Receipts — what real-estate sites actually load · [[NAME]]</title>
+<meta name="description" content="We loaded 17 real-estate sites like a first-time visitor and measured what each one loads, who it contacts, and what it saves in your browser. We're in the table too.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#0e1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Receipts — what real-estate sites actually load · [[NAME]]">
+<meta property="og:url" content="https://[[DOMAIN]]/pages/receipts.html">
+<meta property="og:description" content="17 real-estate sites, measured the same way: scripts, outside companies contacted, what they save in your browser. We're in the table too.">
+<meta property="og:image" content="https://[[DOMAIN]]/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">[[NAME]]</a>
+    <nav>
+      <a href="../tools/toll.html">Toll Calculator</a>
+      <a href="../tools/coop-off.html">Co-op-Off</a>
+      <a href="../tools/rent.html">Rent Estimator</a>
+      <a href="../tools/rto.html">RTO Calculator</a>
+      <a href="../tools/leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>The Receipts</h1>
+  <p class="lead">We loaded 17 Canadian and US real-estate sites the way a first-time visitor would —
+  no account, no tricks — and measured three things: how many scripts they run, how many outside companies
+  they contact, and how much they save in your browser. Here's the ledger. We're in the table too.</p>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">The ledger — as measured on October 15, 2026</h2>
+    <div class="tablewrap">
+    <table class="ledger">
+      <tr><th>Site</th><th>Scripts</th><th>Outside companies contacted</th><th>Saved in your browser</th><th>Notes</th></tr>
+<tr class="us"><td><strong>[[NAME]] (us)</strong></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="note">measured with the same method</td></tr>
+<tr><td><strong>Zown</strong></td><td class="num">93</td><td class="num">30</td><td class="num">23</td><td class="note">also records scrolling sessions</td></tr>
+<tr><td><strong>Pine (formerly Properly)</strong></td><td class="num">70</td><td class="num">19</td><td class="num">18</td><td class="note">now redirects to its rebrand, pine.ca</td></tr>
+<tr><td><strong>HomeLight</strong> (US)</td><td class="num">25</td><td class="num">16</td><td class="num">12</td><td class="note"></td></tr>
+<tr><td><strong>PadMapper / Zumper</strong></td><td class="num">6</td><td class="num">11</td><td class="num">14</td><td class="note">remembers which listings you disliked</td></tr>
+<tr><td><strong>Condos.ca</strong></td><td class="num">50</td><td class="num">9</td><td class="num">33</td><td class="note"></td></tr>
+<tr><td><strong>Compass</strong> (US)</td><td class="num">12</td><td class="num">5</td><td class="num">5</td><td class="note"></td></tr>
+<tr><td><strong>Strata</strong></td><td class="num">35</td><td class="num">4</td><td class="num">7</td><td class="note"></td></tr>
+<tr><td><strong>ViewIt</strong></td><td class="num">11</td><td class="num">4</td><td class="num">0</td><td class="note"></td></tr>
+<tr><td><strong>HouseSigma</strong></td><td class="num">16</td><td class="num">3</td><td class="num">11</td><td class="note"></td></tr>
+<tr><td><strong>Opendoor</strong> (US)</td><td class="num">6</td><td class="num">2</td><td class="num">0</td><td class="note"></td></tr>
+<tr><td><strong>liv.rent</strong></td><td class="num">2</td><td class="num">1</td><td class="num">3</td><td class="note"></td></tr>
+<tr><td><strong>HonestDoor</strong></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="note">blocked our visitor · </td></tr>
+<tr><td><strong>Realtor.ca</strong></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="note">blocked our visitor · </td></tr>
+<tr><td><strong>Redfin</strong> (US)</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="note">blocked our visitor · </td></tr>
+<tr><td><strong>Rentals.ca</strong></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="note">blocked our visitor · </td></tr>
+<tr><td><strong>Zillow</strong> (US)</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="note">served a bot-block + fingerprinting page · </td></tr>
+<tr><td><strong>Zolo</strong></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="note">blocked our visitor · </td></tr>
+    </table>
+    </div>
+    <p class="note" style="margin:10px 0 0">"—" means the site served our visitor a bot-block page instead of
+    its website — we log that too, and we never guess the numbers for those rows.</p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">Who runs what</h2>
+    <div class="tablewrap">
+    <table class="ledger">
+      <tr><th>Platform</th><th>Sites</th><th>Found on</th></tr>
+<tr><td>Google Analytics / Tag Manager</td><td class="num">8</td><td class="note">HouseSigma, Zown, Strata, Condos.ca, Pine (formerly Properly), PadMapper / Zumper, ViewIt, HomeLight</td></tr>
+<tr><td>Google Ads / DoubleClick</td><td class="num">4</td><td class="note">Zown, Pine (formerly Properly), PadMapper / Zumper, HomeLight</td></tr>
+<tr><td>Meta (Facebook) Pixel</td><td class="num">4</td><td class="note">Zown, Condos.ca, Pine (formerly Properly), HomeLight</td></tr>
+<tr><td>TikTok Pixel</td><td class="num">3</td><td class="note">Zown, Pine (formerly Properly), HomeLight</td></tr>
+<tr><td>X / Twitter Pixel</td><td class="num">3</td><td class="note">Zown, Pine (formerly Properly), PadMapper / Zumper</td></tr>
+<tr><td>Microsoft Bing UET</td><td class="num">3</td><td class="note">Zown, Pine (formerly Properly), HomeLight</td></tr>
+<tr><td>LinkedIn Insight</td><td class="num">2</td><td class="note">Zown, Pine (formerly Properly)</td></tr>
+<tr><td>Reddit Pixel</td><td class="num">2</td><td class="note">Zown, Pine (formerly Properly)</td></tr>
+<tr><td>OpenAI bzr SDK</td><td class="num">2</td><td class="note">Zown, HomeLight</td></tr>
+<tr><td>Microsoft Clarity (records sessions)</td><td class="num">1</td><td class="note">Zown</td></tr>
+<tr><td>HubSpot (CRM, forms, ads, chat)</td><td class="num">1</td><td class="note">Zown</td></tr>
+<tr><td>Hyros ad attribution</td><td class="num">1</td><td class="note">Zown</td></tr>
+<tr><td>IP geolocation</td><td class="num">1</td><td class="note">Zown</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What the ledger says</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li>The average measurable site contacts <strong>9 outside companies</strong> the moment you land on it.</li>
+      <li>One site (Zown) runs <strong>21 marketing platforms</strong> at once — including every major ad network's pixel and software that <strong>records your scrolling sessions</strong>.</li>
+      <li>One renter site remembers <strong>which listings you disliked</strong>, in your own browser.</li>
+      <li><strong>Six of seventeen</strong> sites refused an automated visitor entirely — you get a bot-block page instead of a website, and we get no numbers to show you.</li>
+      <li>Our row: <strong>1 script. 0 outside companies. 0 saved in your browser.</strong></li>
+    </ul>
+  </section>
+
+  <section class="panel" style="border-color:#0b6b3a">
+    <h2 style="font-size:18px;margin:0 0 10px">How we measured — so you can check us</h2>
+    <p class="note" style="margin:0 0 10px">Each site was loaded once in a fresh browser profile (no cookies,
+    no account, no history) on October 15, 2026, and the page's own network activity was captured and kept. Counts are
+    <strong>distinct outside domains</strong> the page requested from — the site's own domains are excluded.
+    We re-run this monthly and publish the ledger.</p>
+    <p class="note" style="margin:0">Found an error, or want the capture bundle for any row? Write
+    <strong>[[EMAIL]]</strong> — corrections welcome, evidence kept for every number. The same standard we
+    demand of the industry, applied to us first: see <a href="open-book.html">The Open Book</a> and our
+    <a href="privacy.html">Privacy</a> commitments.</p>
+  </section>
+
+  <footer class="disclaimer">[[NAME]] — success fees only. We earn when you win. Nothing hidden, ever.
+  <p class="legal legal-links"><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="accessibility.html">Accessibility</a></p>
+  </footer>
+</main>
+</body>
+</html>
