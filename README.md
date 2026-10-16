@@ -1,8 +1,8 @@
 # Terminal — repo README
 
-Phase 0 build of the free prosumer real-estate toolkit for **Key & Deed** (brand pending — `Key & Deed` tokens until lock).
+Phase 0 build of the free prosumer real-estate toolkit for **Key & Deed** — **live at https://keyanddeed.ca** (GitHub Pages).
 
-**Status: v1 complete + tested (Oct 14, 2026).** 5 tools, 4 doctrine pages, 3 legal pages, waitlist form, SEO files, smoke-test suite.
+**Status: v2 LIVE (Oct 16, 2026).** Brand locked (Key & Deed), domains registered, email + waitlist active, deployed to GitHub Pages with HTTPS. 5 tools, 5 doctrine pages, 3 legal pages, FormSubmit waitlist, SEO files, smoke-test suite.
 
 ## Layout
 - `index.html` — landing + working waitlist form
@@ -30,11 +30,11 @@ Then regenerate the social card (see the comment inside `assets/og-card.html`):
     msedge --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=1500 \
       --window-size=1200,630 --screenshot=assets/og.png assets/og-card.html
 
-## Deploy (static, no build step)
-1. Push this repo to GitHub and enable Pages (or connect it to Cloudflare Pages, output dir = repo root). Add a `CNAME` file (`keyanddeed.ca`) if using GitHub Pages + custom domain.
-2. **Waitlist activation:** the form posts to `formsubmit.co/ajax/hello@keyanddeed.ca`. After the domain email exists, do ONE test submission and click the confirmation link FormSubmit emails you (one-time). Until then, the form fails gracefully with a mailto fallback. (Tally.so remains an alternative.)
-3. Set the custom domain, enable HTTPS; on Cloudflare add security headers (HSTS, X-Content-Type-Options, Referrer-Policy).
-4. Re-run `node tests/smoke.mjs` after any edit — keep it green before deploying.
+## Deploy — LIVE (Oct 16, 2026)
+- **https://keyanddeed.ca** — GitHub Pages from `main` (repo root), custom domain via the `CNAME` file, HTTPS enforced (cert approved).
+- **DNS (Porkbun):** apex `A` → 185.199.108–111.153 + `AAAA` → 2606:50c0:800x::153 (GitHub Pages); `www` CNAME → `mahudkarshwetang-coder.github.io`; email records untouched (`MX` fwd1/fwd2.porkbun.com, `TXT` SPF).
+- **Waitlist:** FormSubmit active (`formsubmit.co/ajax/hello@keyanddeed.ca` → forwards to the owner inbox). NOTE: FormSubmit activation is per-origin — after any domain change, ONE new test submission + one confirmation click.
+- Redeploy = push to `main` (Pages auto-builds). Re-run `node tests/smoke.mjs` after any edit — keep it green before pushing.
 
 ## Rules of this repo
 - No percentages-for-us anywhere; no dark patterns; no gated data; no analytics/trackers.
