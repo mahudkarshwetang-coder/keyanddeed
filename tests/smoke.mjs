@@ -17,7 +17,7 @@ const ok = (cond, msg) => {
   else { failures++; console.log('  FAIL  ' + msg); }
 };
 
-const toolPages = ['tools/toll.html','tools/split.html','tools/closing.html','tools/coop-off.html','tools/rent.html','tools/rent-increase.html','tools/rto.html','tools/leverage.html'];
+const toolPages = ['tools/toll.html','tools/split.html','tools/closing.html','tools/affordability.html','tools/coop-off.html','tools/rent.html','tools/rent-increase.html','tools/rto.html','tools/leverage.html'];
 const allPages = ['index.html','404.html', ...toolPages,
   'pages/receipts.html','pages/open-book.html','pages/rto-charter.html','pages/fee-card.html','pages/how-we-make-money.html',
   'pages/privacy.html','pages/terms.html','pages/accessibility.html','pages/coop-playbook.html'];
@@ -192,6 +192,36 @@ console.log('\n## Split explorer: golden values (dossier 04 comp models)');
   ok(p7('agent') === '$11,515', 'split: $700k franchise agent net = $11,515 — got ' + p7('agent'));
   const no = run({ hst: ['checked', false] });
   ok(no('allin').includes('$50,000') && no('allin').includes('5.00%'), 'split: HST off — got ' + no('allin'));
+}
+
+console.log('\n## Affordability checker: golden values (CMHC rules, verified live Oct 2026)');
+{
+  const html = readFileSync(join(root, 'tools/affordability.html'), 'utf8');
+  const code = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join('\n;\n');
+  const run = over => {
+    const ids = buildDom(html);
+    for (const k in over) if (ids[k]) ids[k][over[k][0]] = over[k][1];
+    new Function('document', 'location', code)(
+      { getElementById: id => ids[id] ?? null },
+      { search: '', origin: 'https://example.test', pathname: '/tools/affordability.html' });
+    return id => String(ids[id].textContent);
+  };
+  const t = run({}); // $800k, $80k down (10%), 4.99%, 25yr, $180k income
+  ok(t('stressrate') === '6.99% (your rate + 2%)', 'afford: stress rate — got ' + t('stressrate'));
+  ok(t('payment') === '$4,313/mo' && t('paymentstress') === '$5,195/mo', 'afford: payments $4,313 / $5,195 — got ' + t('payment') + ' / ' + t('paymentstress'));
+  ok(t('insurance') === '$22,320 (3.10% of the loan — capitalized)', 'afford: premium 3.10% tier — got ' + t('insurance'));
+  ok(t('loan') === '$742,320 (incl. premium)' && t('mindown') === '$55,000 — OK', 'afford: loan + min down — got ' + t('loan') + ' / ' + t('mindown'));
+  ok(t('gds') === '40.0% — over the 39% cap' && t('tds') === '40.0% — within the 44% cap', 'afford: GDS/TDS — got ' + t('gds') + ' / ' + t('tds'));
+  ok(t('maxloan') === '≈ $722,000' && t('maxprice') === '≈ $780,000', 'afford: max loan/price — got ' + t('maxloan') + ' / ' + t('maxprice'));
+  ok(t('verdict').includes('fails the stress test') && t('verdict').includes('$145'), 'afford: stress-fail verdict — got ' + JSON.stringify(t('verdict').slice(0, 70)));
+  const q = run({ income: ['value', '250000'] });
+  ok(q('verdict').includes('Qualifies at the stress-test rate'), 'afford: $250k qualifies — got ' + JSON.stringify(q('verdict').slice(0, 60)));
+  const d20 = run({ down: ['value', '160000'] });
+  ok(d20('insurance') === '$0 — 20%+ down, no insurance needed' && d20('loan') === '$640,000 (no premium)', 'afford: 20% down, no premium — got ' + d20('insurance'));
+  const a30 = run({ amort: ['value', '30'] });
+  ok(a30('payment') === '$3,957/mo', 'afford: 30-yr payment $3,957 — got ' + a30('payment'));
+  const fl = run({ rate: ['value', '2.99'] });
+  ok(fl('stressrate') === '5.25% (the floor — above your rate + 2%)', 'afford: 5.25% floor binds — got ' + fl('stressrate'));
 }
 
 console.log('\n' + (failures === 0 ? 'ALL ' + checks + ' CHECKS PASSED' : failures + ' of ' + checks + ' checks FAILED'));

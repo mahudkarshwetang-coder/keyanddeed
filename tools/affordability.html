@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Affordability & Stress-Test Checker — Key & Deed</title>
+<meta name="description" content="What will a lender actually allow? The real math: the stress test (rate + 2% or 5.25%), CMHC insurance premiums, minimum down payments and the 39%/44% ratios. Free, sourced, no signup.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#171310">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Affordability & Stress-Test Checker — Key & Deed">
+<meta property="og:url" content="https://keyanddeed.ca/tools/affordability.html">
+<meta property="og:description" content="What will a lender actually allow? The real math: the stress test (rate + 2% or 5.25%), CMHC insurance premiums, minimum down payments and the 39%/44% ratios. Free, sourced, no signup.">
+<meta property="og:image" content="https://keyanddeed.ca/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Key & Deed</a>
+    <nav>
+      <a href="toll.html">Toll Calculator</a>
+      <a href="split.html">Split Explorer</a>
+      <a href="closing.html">Closing Costs</a>
+      <a href="affordability.html" class="active" aria-current="page">Affordability</a>
+      <a href="coop-off.html">Co-op-Off</a>
+      <a href="rent.html">Rent Estimator</a>
+      <a href="rent-increase.html">Rent Increase</a>
+      <a href="rto.html">RTO Calculator</a>
+      <a href="leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>The Affordability &amp; Stress-Test Checker</h1>
+  <p class="lead">What will a lender actually say? Run the real math — the stress test, the insurance premium, the minimum down payment and the 39% / 44% ratios — before you fall in love with a listing.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div><label for="price">Home price ($)</label><input id="price" type="number" value="800000" min="50000" step="10000"></div>
+      <div><label for="down">Your down payment ($)</label><input id="down" type="number" value="80000" min="0" step="5000"></div>
+      <div><label for="rate">Your mortgage rate (%)</label><input id="rate" type="number" value="4.99" min="0.5" step="0.05"></div>
+      <div><label for="amort">Amortization</label>
+        <select id="amort">
+          <option value="25" selected>25 years — standard</option>
+          <option value="30">30 years — eligible buyers (CMHC Home Start)</option>
+        </select>
+      </div>
+      <div><label for="income">Gross household income ($/year)</label><input id="income" type="number" value="180000" min="1000" step="5000"></div>
+      <div><label for="taxes">Property tax ($/month, ≈0.8–1%/yr typical)</label><input id="taxes" type="number" value="650" min="0" step="25"></div>
+      <div><label for="debts">Other monthly debt payments ($)</label><input id="debts" type="number" value="0" min="0" step="50"></div>
+      <div><label for="condo">Condo fees ($/month, if any — 50% counted)</label><input id="condo" type="number" value="0" min="0" step="50"></div>
+    </div>
+    <p class="note" style="margin-top:10px">Heating is baked in at $150/mo (the standard PITH treatment). The rate field is yours to set — we don't quote live rates. Insurance applies below 20% down; below the minimum down payment there's no insurance at all.</p>
+  </section>
+
+  <section class="panel">
+    <div class="result-line" id="verdict" aria-live="polite">—</div>
+    <div class="grid">
+      <div><p class="note">Minimum down payment for this price</p><div class="out" id="mindown">—</div></div>
+      <div><p class="note">CMHC insurance premium</p><div class="out" id="insurance">—</div></div>
+      <div><p class="note">Mortgage amount</p><div class="out" id="loan">—</div></div>
+      <div><p class="note">Payment at your rate</p><div class="out" id="payment">—</div></div>
+      <div><p class="note">The stress-test rate</p><div class="out" id="stressrate">—</div></div>
+      <div><p class="note">Payment at the stress-test rate</p><div class="out" id="paymentstress">—</div></div>
+      <div><p class="note">GDS — housing costs vs income</p><div class="out" id="gds">—</div></div>
+      <div><p class="note">TDS — all payments vs income</p><div class="out" id="tds">—</div></div>
+      <div><p class="note">Max mortgage this income supports</p><div class="out" id="maxloan">—</div></div>
+      <div><p class="note">Max purchase price (same down payment)</p><div class="out" id="maxprice">—</div></div>
+    </div>
+    <p class="note" id="equiv"></p>
+    <p class="note">Pre-approval is not approval — the FCAC says so plainly, and property or file changes can re-open everything. Closing costs are the other cash you need on day one — run the <a href="closing.html">Closing-Cost Calculator</a> next.</p>
+    <div class="meters" id="meters" aria-hidden="true"></div>
+    <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">Sources &amp; assumptions</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li>Minimum down payment (5% of the first $500k + 10% of the remainder), the under-$1.5M insurable ceiling, 25/30-year amortization, GDS 39% / TDS 44%, the greater of (rate + 2%) or 5.25%, and the premium table (0.60–4.00%, 4.50% non-traditional): <a href="https://www.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs/purchase">CMHC — Purchase</a> (verified Oct 2026).</li>
+      <li>At $1.5M and above, no insurance — 20%+ down and an uninsured mortgage. Energy-efficient homes may qualify for a 25% premium refund (<a href="https://www.cmhc-schl.gc.ca/consumers/home-buying/mortgage-loan-insurance-for-consumers/cmhc-eco-products">CMHC Eco Products</a>).</li>
+      <li>Pre-approval ≠ approval; rate holds run 60–130 days: <a href="https://canada.ca/en/financial-consumer-agency/services/mortgages/preapproval-qualify-mortgage.html">FCAC — Getting preapproved for a mortgage</a>.</li>
+      <li>Simplifications: heating $150/mo; condo fees counted at 50% in TDS; lender-specific criteria, credit (min 600 for CMHC) and other debts vary. Estimates only — <em>not a pre-approval, not advice</em>; your lender's actual test is the final word.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What next?</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>Budget the rest of the cash:</strong> the <a href="closing.html">Closing-Cost Calculator</a> — land transfer tax, legal fees, everything on closing day.</li>
+      <li><strong>Strengthen your position:</strong> score your negotiability with the <a href="leverage.html">Leverage Scorer</a>.</li>
+      <li><strong>Want the full Terminal?</strong> <a href="../index.html#waitlist">Join the founding-member list</a> — free tools, success fees only, no spam.</li>
+    </ul>
+  </section>
+
+  <p class="note">Spotted a wrong number? <a href="mailto:hello@keyanddeed.ca">Tell us</a> — corrections jump the queue.</p>
+
+  <footer class="disclaimer">Key & Deed — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var HEATING = 150;
+
+  function fmt(n){ return new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n); }
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
+  function round1000(n){ return Math.round(n / 1000) * 1000; }
+
+  // Canadian mortgage math: semi-annual compounding.
+  function pmt(P, annual, years){ var r = Math.pow(1 + annual / 2, 1/6) - 1; var n = Math.round(years * 12); return P * r / (1 - Math.pow(1 + r, -n)); }
+
+  function minDown(price){
+    if (price >= 1500000) return price * 0.20;
+    if (price <= 500000) return price * 0.05;
+    return 25000 + 0.10 * (price - 500000);
+  }
+  function premRate(ltv){ // ltv in %
+    if (ltv <= 65) return 0.006; if (ltv <= 75) return 0.017; if (ltv <= 80) return 0.024;
+    if (ltv <= 85) return 0.028; if (ltv <= 90) return 0.031; return 0.04;
+  }
+
+  function update(){
+    var price = Math.max(50000, num('price'));
+    var down = Math.max(0, num('down'));
+    var rate = Math.max(0.5, num('rate'));
+    var years = parseFloat($('amort').value) || 25;
+    var income = Math.max(1000, num('income'));
+    var taxes = num('taxes'), debts = num('debts'), condo = num('condo');
+
+    var loan = Math.max(0, price - down);
+    var ltv = loan / price * 100;
+    var md = minDown(price);
+    var downShort = down < md - 0.5;
+
+    var insRate = (ltv > 80 && ltv <= 95) ? premRate(ltv) : 0;
+    var premium = insRate > 0 ? loan * insRate : 0;
+    var totalLoan = loan + premium;
+
+    var stressRate = Math.max(rate + 2, 5.25);
+    var incM = income / 12;
+    var pC = pmt(totalLoan, rate / 100, years);
+    var pS = pmt(totalLoan, stressRate / 100, years);
+
+    var pith = pS + taxes + HEATING;
+    var tdsNum = pith + debts + condo * 0.5;
+    var gds = pith / incM * 100, tds = tdsNum / incM * 100;
+    var overG = pith - 0.39 * incM, overT = tdsNum - 0.44 * incM;
+    var over = Math.max(overG, overT);
+    var cGds = (pC + taxes + HEATING) / incM * 100;
+    var cTds = cGds + (debts + condo * 0.5) / incM * 100;
+
+    if (downShort) {
+      $('verdict').textContent = 'Short on the minimum down payment: add ' + fmt(md - down) + ' — mortgage insurance needs it.';
+    } else if (gds <= 39.001 && tds <= 44.001) {
+      $('verdict').textContent = 'Qualifies at the stress-test rate — ' + fmt(-over) + '/mo of room under the caps.';
+    } else if (cGds <= 39.001 && cTds <= 44.001) {
+      $('verdict').textContent = 'Passes at your rate — fails the stress test: ' + fmt(over) + '/mo over the cap. This is exactly how pre-approvals die.';
+    } else {
+      $('verdict').textContent = 'Doesn\u2019t qualify on these numbers — ' + fmt(over) + '/mo over the caps at the stress rate.';
+    }
+
+    $('mindown').textContent = fmt(md) + (downShort ? ' — ' + fmt(md - down) + ' short' : ' — OK');
+    $('insurance').textContent = downShort ? 'n/a — fix the down payment first'
+      : premium > 0 ? fmt(premium) + ' (' + (insRate * 100).toFixed(2) + '% of the loan — capitalized)'
+      : '$0 — 20%+ down, no insurance needed';
+    $('loan').textContent = premium > 0 ? fmt(totalLoan) + ' (incl. premium)' : fmt(loan) + ' (no premium)';
+    $('payment').textContent = fmt(pC) + '/mo';
+    $('stressrate').textContent = (rate + 2 >= 5.25) ? (rate + 2).toFixed(2) + '% (your rate + 2%)' : '5.25% (the floor — above your rate + 2%)';
+    $('paymentstress').textContent = fmt(pS) + '/mo';
+    $('gds').textContent = gds.toFixed(1) + '% — ' + (gds <= 39.001 ? 'within the 39% cap' : 'over the 39% cap');
+    $('tds').textContent = tds.toFixed(1) + '% — ' + (tds <= 44.001 ? 'within the 44% cap' : 'over the 44% cap');
+
+    // Max mortgage search at the qualifying rate, holding taxes/debts/condo fixed; premium approximated at the current tier.
+    var budget = Math.min(0.39 * incM - taxes - HEATING, 0.44 * incM - taxes - HEATING - debts - condo * 0.5);
+    var maxBase = 0;
+    if (budget > 0) {
+      var lo = 0, hi = 2000000;
+      for (var i = 0; i < 80; i++){ var mid = (lo + hi) / 2; if (pmt(mid * (1 + insRate), stressRate / 100, years) <= budget) lo = mid; else hi = mid; }
+      maxBase = lo;
+    }
+    $('maxloan').textContent = '≈ ' + fmt(round1000(maxBase * (1 + insRate)));
+    $('maxprice').textContent = '≈ ' + fmt(round1000(maxBase + down));
+
+    var diff = pS - pC;
+    $('equiv').textContent = 'The stress test adds ' + fmt(diff) + '/mo to what you must prove you can carry — you never actually pay it, you just have to survive it.';
+
+    var mrow = function(label, v, max, cls){
+      var w = v > 0 ? Math.max(1.6, Math.min(100, v / max * 100)) : 0;
+      return '<div class="meter-row"><span>' + label + '</span><span class="meter ' + cls + '"><i style="width:' + w + '%"></i></span><span class="val">' + fmt(v) + '</span></div>';
+    };
+    var mt = Math.max(pS, 1);
+    $('meters').innerHTML =
+      mrow('Your payment', pC, mt, 'grey') +
+      mrow('Stress-test payment', pS, mt, '') +
+      mrow('The add-on', diff, mt, 'grey');
+  }
+
+  function shareLink(){
+    var p = new URLSearchParams();
+    p.set('p', $('price').value); p.set('d', $('down').value); p.set('r', $('rate').value); p.set('a', $('amort').value);
+    p.set('i', $('income').value); p.set('t', $('taxes').value); p.set('b', $('debts').value); p.set('cf', $('condo').value);
+    var url = location.origin + location.pathname + '?' + p.toString();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ $('copied').textContent = 'Copied — send it to your mortgage broker.'; });
+    } else { $('copied').textContent = url; }
+  }
+
+  ['price','down','rate','amort','income','taxes','debts','condo'].forEach(function(id){
+    $(id).addEventListener('input', update);
+    $(id).addEventListener('change', update);
+  });
+  $('share').addEventListener('click', shareLink);
+
+  var q = new URLSearchParams(location.search);
+  if (q.get('p')) $('price').value = q.get('p');
+  if (q.get('d')) $('down').value = q.get('d');
+  if (q.get('r')) $('rate').value = q.get('r');
+  if (q.get('a')) $('amort').value = q.get('a');
+  if (q.get('i')) $('income').value = q.get('i');
+  if (q.get('t')) $('taxes').value = q.get('t');
+  if (q.get('b')) $('debts').value = q.get('b');
+  if (q.get('cf')) $('condo').value = q.get('cf');
+
+  update();
+})();
+</script>
+</body>
+</html>
