@@ -2,11 +2,11 @@
 
 Phase 0 build of the free prosumer real-estate toolkit for **Key & Deed** — **live at https://keyanddeed.ca** (GitHub Pages).
 
-**Status: v2 LIVE (Oct 16, 2026).** Brand locked (Key & Deed), domains registered, email + waitlist active, deployed to GitHub Pages with HTTPS. 6 tools, 5 doctrine pages, 3 legal pages, FormSubmit waitlist, SEO files, smoke-test suite.
+**Status: v2 LIVE (Oct 16, 2026).** Brand locked (Key & Deed), domains registered, email + waitlist active, deployed to GitHub Pages with HTTPS. 7 tools, 5 doctrine pages, 3 legal pages, FormSubmit waitlist, SEO files, smoke-test suite.
 
 ## Layout
 - `index.html` — landing + working waitlist form
-- `tools/` — `toll.html` · `closing.html` · `coop-off.html` · `rent.html` · `rto.html` · `leverage.html`
+- `tools/` — `toll.html` · `closing.html` · `coop-off.html` · `rent.html` · `rent-increase.html` · `rto.html` · `leverage.html`
 - `pages/` — `open-book` · `rto-charter` · `fee-card` · `how-we-make-money` · `privacy` · `terms` · `accessibility`
 - `data/rents.json` — CMHC Fall 2025 rents, 18 CMAs (the rent tool embeds a mirror of this table)
 - `assets/` — `css/site.css`, `favicon.svg`, `og.png` (+ `og-card.html`, its source)
@@ -16,7 +16,7 @@ Phase 0 build of the free prosumer real-estate toolkit for **Key & Deed** — **
 
 ## Run / test / maintain
     python3 -m http.server 8787        # serve locally (open http://localhost:8787)
-    node tests/smoke.mjs               # 94 checks: scripts run, ids exist, outputs populate, golden values, links resolve
+    node tests/smoke.mjs               # 119 checks: scripts run, ids exist, outputs populate, golden values, links resolve
     python3 scripts/inject_meta.py     # idempotent: favicon/OG/aria-live/legal footer links (safe re-run)
 
 QA note (Windows): headless Edge clamps `--window-size` to a ~500px minimum and then crops —

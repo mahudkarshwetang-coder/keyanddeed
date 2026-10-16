@@ -17,7 +17,7 @@ const ok = (cond, msg) => {
   else { failures++; console.log('  FAIL  ' + msg); }
 };
 
-const toolPages = ['tools/toll.html','tools/closing.html','tools/coop-off.html','tools/rent.html','tools/rto.html','tools/leverage.html'];
+const toolPages = ['tools/toll.html','tools/closing.html','tools/coop-off.html','tools/rent.html','tools/rent-increase.html','tools/rto.html','tools/leverage.html'];
 const allPages = ['index.html','404.html', ...toolPages,
   'pages/receipts.html','pages/open-book.html','pages/rto-charter.html','pages/fee-card.html','pages/how-we-make-money.html',
   'pages/privacy.html','pages/terms.html','pages/accessibility.html','pages/coop-playbook.html'];
@@ -134,6 +134,37 @@ console.log('\n## Closing-cost calculator: golden values (research dossier worke
   const x = run({ price: ['value', '3500000'] });
   ok(x('mltt') === fmt0(83475), 'closing: MLTT @$3.5M graduated tiers = ' + fmt0(83475) + ' — got ' + x('mltt'));
   ok(x('total').includes(fmt0(160430.39)), 'closing: $3.5M total ' + fmt0(160430.39) + ' — got ' + JSON.stringify(x('total')));
+}
+
+console.log('\n## Rent-increase checker: golden values (ontario.ca / LTB rules, verified Oct 2026)');
+{
+  const html = readFileSync(join(root, 'tools/rent-increase.html'), 'utf8');
+  const code = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join('\n;\n');
+  const run = over => {
+    const ids = buildDom(html);
+    for (const k in over) if (ids[k]) ids[k][over[k][0]] = over[k][1];
+    new Function('document', 'location', code)(
+      { getElementById: id => ids[id] ?? null },
+      { search: '', origin: 'https://example.test', pathname: '/tools/rent-increase.html' });
+    return id => String(ids[id].textContent);
+  };
+  const t = run({}); // defaults: $2,500 rent, 2.5% asked, effective 2026 (2.1%), 90 days, 12 months
+  ok(t('cap') === '$52.50 (2.1%)', 'rent-rise: cap @2.1% on $2,500 = $52.50 — got ' + t('cap'));
+  ok(t('asked') === '$62.50 (2.5%)', 'rent-rise: asked = $62.50 — got ' + t('asked'));
+  ok(t('over') === '$10.00' && t('yearly') === '$120.00', 'rent-rise: over = $10.00/mo ($120/yr) — got ' + t('over') + ' / ' + t('yearly'));
+  ok(t('newrent') === '$2,562.50' && t('caprent') === '$2,552.50', 'rent-rise: new rents — got ' + t('newrent') + ' / ' + t('caprent'));
+  ok(t('timing') === '90 days — OK' && t('spacing') === '12 months — OK', 'rent-rise: timing/spacing defaults OK');
+  ok(t('verdict').includes('Over the guideline'), 'rent-rise: over-guideline verdict — got ' + JSON.stringify(t('verdict').slice(0, 60)));
+  const y27 = run({ year: ['value', '2027'] });
+  ok(y27('cap') === '$47.50 (1.9%)' && y27('over') === '$15.00', 'rent-rise: 2027 cap = $47.50, over $15 — got ' + y27('cap') + ' / ' + y27('over'));
+  const x = run({ exempt: ['checked', true] });
+  ok(x('cap') === 'No cap — exempt unit' && x('verdict').includes('exempt'), 'rent-rise: exempt unit — got ' + x('cap'));
+  const n = run({ notice: ['value', '60'] });
+  ok(n('timing') === '60 days — 30 days short', 'rent-rise: 60-day notice flag — got ' + n('timing'));
+  const m = run({ months: ['value', '10'] });
+  ok(m('spacing') === '10 months — too soon (need 12)', 'rent-rise: 10-month flag — got ' + m('spacing'));
+  const w = run({ increase: ['value', '2.0'] });
+  ok(w('over') === '$0.00' && w('verdict').includes('Within the guideline'), 'rent-rise: within-guideline verdict — got ' + JSON.stringify(w('verdict').slice(0, 60)));
 }
 
 console.log('\n' + (failures === 0 ? 'ALL ' + checks + ' CHECKS PASSED' : failures + ' of ' + checks + ' checks FAILED'));
