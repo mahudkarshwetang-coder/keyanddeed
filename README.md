@@ -16,7 +16,7 @@ Phase 0 build of the free prosumer real-estate toolkit for **Key & Deed** — **
 
 ## Run / test / maintain
     python3 -m http.server 8787        # serve locally (open http://localhost:8787)
-    node tests/smoke.mjs               # 168 checks: scripts run, ids exist, outputs populate, golden values, links resolve
+    node tests/smoke.mjs               # 173 checks: scripts run, ids exist, outputs populate, golden values, links resolve
     python3 scripts/inject_meta.py     # idempotent: favicon/OG/aria-live/legal footer links (safe re-run)
 
 QA note (Windows): headless Edge clamps `--window-size` to a ~500px minimum and then crops —

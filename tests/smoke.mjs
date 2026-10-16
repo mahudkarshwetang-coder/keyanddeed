@@ -224,5 +224,27 @@ console.log('\n## Affordability checker: golden values (CMHC rules, verified liv
   ok(fl('stressrate') === '5.25% (the floor — above your rate + 2%)', 'afford: 5.25% floor binds — got ' + fl('stressrate'));
 }
 
+console.log('\n## Toll calculator: golden values (the 5.65% all-in convention)');
+{
+  const html = readFileSync(join(root, 'tools/toll.html'), 'utf8');
+  const code = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join('\n;\n');
+  const run = over => {
+    const ids = buildDom(html);
+    for (const k in over) if (ids[k]) ids[k][over[k][0]] = over[k][1];
+    new Function('document', 'location', code)(
+      { getElementById: id => ids[id] ?? null },
+      { search: '', origin: 'https://example.test', pathname: '/tools/toll.html' });
+    return id => String(ids[id].textContent);
+  };
+  const t = run({}); // $1M, 2.5% + 2.5%, ON 13%, $1,999 fee, HST on
+  ok(t('total') === 'The toll: $56,500 (5.65% of the price, all-in) — you keep $54,501', 'toll: all-in total line — got ' + JSON.stringify(t('total')));
+  ok(t('comm') === '$50,000' && t('taxline') === '$6,500' && t('save') === '$54,501', 'toll: comm / HST / keep — got ' + t('comm') + ' / ' + t('taxline') + ' / ' + t('save'));
+  ok(t('vsanchor').includes('$39,550') && t('vsanchor').includes('$16,950'), 'toll: $700k same-work comparison — got ' + JSON.stringify(t('vsanchor').slice(0, 80)));
+  const no = run({ hst: ['checked', false] });
+  ok(no('total').includes('$50,000') && no('total').includes('(5.00% of the price, all-in)'), 'toll: HST off — got ' + JSON.stringify(no('total').slice(0, 60)));
+  const bc = run({ prov: ['value', 'BC'] });
+  ok(bc('taxline') === '$6,000', 'toll: BC 12% HST — got ' + bc('taxline'));
+}
+
 console.log('\n' + (failures === 0 ? 'ALL ' + checks + ' CHECKS PASSED' : failures + ' of ' + checks + ' checks FAILED'));
 process.exitCode = failures === 0 ? 0 : 1;

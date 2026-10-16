@@ -71,6 +71,7 @@
       <div><p class="note">You keep</p><div class="out" id="save">—</div></div>
     </div>
     <p class="note" id="equiv"></p>
+    <p class="note" id="vsanchor"></p>
     <div class="meters" id="meters" aria-hidden="true"></div>
     <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
   </section>
@@ -111,7 +112,8 @@
   function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
 
   function update(){
-    var price = num('price'), list = num('list')/100, coop = num('coop')/100;
+    var price = Math.max(50000, num('price'));
+    var list = num('list')/100, coop = num('coop')/100;
     var prov = $('prov').value, tax = HST[prov] || 0.13, applyTax = $('hst').checked;
     var ourFee = num('ourfee');
 
@@ -124,12 +126,17 @@
     $('taxline').textContent = fmt(taxAmt);
     $('our').textContent = fmt(ourFee);
     $('save').textContent = fmt(keep);
-    $('total').textContent = 'The toll: ' + fmt(total) + ' — you keep ' + fmt(keep);
+    $('total').textContent = 'The toll: ' + fmt(total) + ' (' + (total / price * 100).toFixed(2) + '% of the price, all-in) — you keep ' + fmt(keep);
 
     var downPct = price * 0.2;
     var equiv = '≈ ' + Math.max(0, Math.round(keep/downPct*100)) + '% of a 20% down payment on this home'
               + ' · ≈ ' + Math.max(0, Math.round(keep/TORONTO_RENT_2BR)) + ' months of Toronto rent (CMHC Fall 2025)';
     $('equiv').textContent = equiv;
+
+    var anchor = price > 800000 ? 700000 : 1000000;
+    var at = anchor * (list + coop) * (applyTax ? 1 + tax : 1);
+    var d = total - at;
+    $('vsanchor').textContent = 'Same work, different sticker: at ' + fmt(anchor) + ', this same deal tolls ' + fmt(at) + ' (' + (d >= 0 ? '−' : '+') + fmt(Math.abs(d)) + '). The percentage scales with price; the work doesn\'t.';
 
     var mrow = function(label, v, max, cls){
       var w = v > 0 ? Math.max(1.6, Math.min(100, v / max * 100)) : 0;
