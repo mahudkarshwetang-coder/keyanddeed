@@ -17,7 +17,7 @@ const ok = (cond, msg) => {
   else { failures++; console.log('  FAIL  ' + msg); }
 };
 
-const toolPages = ['tools/toll.html','tools/closing.html','tools/coop-off.html','tools/rent.html','tools/rent-increase.html','tools/rto.html','tools/leverage.html'];
+const toolPages = ['tools/toll.html','tools/split.html','tools/closing.html','tools/coop-off.html','tools/rent.html','tools/rent-increase.html','tools/rto.html','tools/leverage.html'];
 const allPages = ['index.html','404.html', ...toolPages,
   'pages/receipts.html','pages/open-book.html','pages/rto-charter.html','pages/fee-card.html','pages/how-we-make-money.html',
   'pages/privacy.html','pages/terms.html','pages/accessibility.html','pages/coop-playbook.html'];
@@ -165,6 +165,33 @@ console.log('\n## Rent-increase checker: golden values (ontario.ca / LTB rules, 
   ok(m('spacing') === '10 months — too soon (need 12)', 'rent-rise: 10-month flag — got ' + m('spacing'));
   const w = run({ increase: ['value', '2.0'] });
   ok(w('over') === '$0.00' && w('verdict').includes('Within the guideline'), 'rent-rise: within-guideline verdict — got ' + JSON.stringify(w('verdict').slice(0, 60)));
+}
+
+console.log('\n## Split explorer: golden values (dossier 04 comp models)');
+{
+  const html = readFileSync(join(root, 'tools/split.html'), 'utf8');
+  const code = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join('\n;\n');
+  const run = over => {
+    const ids = buildDom(html);
+    for (const k in over) if (ids[k]) ids[k][over[k][0]] = over[k][1];
+    new Function('document', 'location', code)(
+      { getElementById: id => ids[id] ?? null },
+      { search: '', origin: 'https://example.test', pathname: '/tools/split.html' });
+    return id => String(ids[id].textContent);
+  };
+  const t = run({}); // $1M, 2.5% + 2.5%, franchise (70/30 + 6% royalty), HST on
+  ok(t('agent') === '$16,450' && t('brokerage') === '$8,550', 'split: franchise $1M — agent $16,450 / brokerage $8,550 — got ' + t('agent') + ' / ' + t('brokerage'));
+  ok(t('royalty') === '$1,500 (6% of GCI)', 'split: franchise royalty = $1,500 — got ' + t('royalty'));
+  ok(t('coop') === '$25,000' && t('allin').includes('$56,500') && t('allin').includes('5.65%'), 'split: co-op $25k, all-in $56,500 @ 5.65% — got ' + t('allin'));
+  ok(t('flow').startsWith('Where the $56,500 lands'), 'split: flow line — got ' + JSON.stringify(t('flow').slice(0, 50)));
+  const c = run({ model: ['value', 'cloud'] });
+  ok(c('agent') === '$20,000' && c('brokerage') === '$5,000' && c('royalty') === '$0 — none', 'split: cloud 80/20 — got ' + c('agent') + ' / ' + c('brokerage'));
+  const f100 = run({ model: ['value', 'flat100'] });
+  ok(f100('agent') === '$24,401' && f100('brokerage') === '$599 (+ $109/mo fees)', 'split: 100% shop — got ' + f100('agent') + ' / ' + f100('brokerage'));
+  const p7 = run({ price: ['value', '700000'] });
+  ok(p7('agent') === '$11,515', 'split: $700k franchise agent net = $11,515 — got ' + p7('agent'));
+  const no = run({ hst: ['checked', false] });
+  ok(no('allin').includes('$50,000') && no('allin').includes('5.00%'), 'split: HST off — got ' + no('allin'));
 }
 
 console.log('\n' + (failures === 0 ? 'ALL ' + checks + ' CHECKS PASSED' : failures + ' of ' + checks + ' checks FAILED'));

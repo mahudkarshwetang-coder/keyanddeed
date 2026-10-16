@@ -16,7 +16,7 @@ import pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PAGES = [
     "index.html", "404.html",
-    "tools/toll.html", "tools/closing.html", "tools/coop-off.html", "tools/rent.html", "tools/rent-increase.html",
+    "tools/toll.html", "tools/split.html", "tools/closing.html", "tools/coop-off.html", "tools/rent.html", "tools/rent-increase.html",
     "tools/rto.html", "tools/leverage.html",
     "pages/receipts.html", "pages/open-book.html", "pages/rto-charter.html", "pages/fee-card.html",
     "pages/how-we-make-money.html", "pages/coop-playbook.html", "pages/privacy.html",

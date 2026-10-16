@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Commission Split Explorer — Key & Deed</title>
+<meta name="description" content="Where does the commission actually go? Set a sale price and a comp model — see every split from the seller's cheque to the agent's net. Free, sourced, no signup.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#171310">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Commission Split Explorer — Key & Deed">
+<meta property="og:url" content="https://keyanddeed.ca/tools/split.html">
+<meta property="og:description" content="Where does the commission actually go? Set a sale price and a comp model — see every split from the seller's cheque to the agent's net. Free, sourced, no signup.">
+<meta property="og:image" content="https://keyanddeed.ca/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Key & Deed</a>
+    <nav>
+      <a href="toll.html">Toll Calculator</a>
+      <a href="split.html" class="active" aria-current="page">Split Explorer</a>
+      <a href="closing.html">Closing Costs</a>
+      <a href="coop-off.html">Co-op-Off</a>
+      <a href="rent.html">Rent Estimator</a>
+      <a href="rent-increase.html">Rent Increase</a>
+      <a href="rto.html">RTO Calculator</a>
+      <a href="leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>The Commission Split Explorer</h1>
+  <p class="lead">The 5% you pay doesn't land where you think. Set the price and the compensation model — watch the commission split, dollar by dollar, from the seller's cheque down to the agent's net.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div><label for="price">Sale price ($)</label><input id="price" type="number" value="1000000" min="50000" step="10000"></div>
+      <div><label for="list">Listing-side fee (%)</label><input id="list" type="number" value="2.5" min="0" step="0.1"></div>
+      <div><label for="coop">Buyer-side (co-op) fee (%)</label><input id="coop" type="number" value="2.5" min="0" step="0.1"></div>
+      <div><label for="model">The agent's compensation model</label>
+        <select id="model">
+          <option value="franchise" selected>Traditional franchise — 70/30 split + ~6% royalty</option>
+          <option value="cloud">Cloud/capped — 80/20, C$16,000 annual cap</option>
+          <option value="flat100">100%-commission shop — $109/mo + ~$599/deal</option>
+        </select>
+      </div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="hst" type="checkbox" checked style="width:auto"> Apply 13% HST to the commissions</label></div>
+    </div>
+    <p class="note" style="margin-top:10px">Reported industry models, rounded (sources below). Commissions are fully negotiable — nothing here is a rate card, and the models are examples, not endorsements.</p>
+  </section>
+
+  <section class="panel">
+    <div class="result-line" id="flow" aria-live="polite">—</div>
+    <div class="grid">
+      <div><p class="note">Commission, both sides (pre-tax)</p><div class="out" id="totalcomm">—</div></div>
+      <div><p class="note">HST on the commissions</p><div class="out" id="hstline">—</div></div>
+      <div><p class="note">What the seller pays, all-in</p><div class="out" id="allin">—</div></div>
+      <div><p class="note">Buyer-side brokerage — leaves at closing</p><div class="out" id="coop">—</div></div>
+      <div><p class="note">Listing-side gross — your agent's side</p><div class="out" id="lsgross">—</div></div>
+      <div><p class="note">Royalty / cut off the top</p><div class="out" id="royalty">—</div></div>
+      <div><p class="note">The agent actually nets</p><div class="out" id="agent">—</div></div>
+      <div><p class="note">The listing brokerage keeps</p><div class="out" id="brokerage">—</div></div>
+    </div>
+    <p class="note" id="modelnote"></p>
+    <p class="note" id="equiv"></p>
+    <div class="meters" id="meters" aria-hidden="true"></div>
+    <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">Sources &amp; assumptions</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li>Split models and the royalty convention (70/30 + ~6–8% of GCI off the top; low-split shops at $99–$299/mo + $295–$695/deal): <a href="https://www.summitly.ca/news/low-commission-splits/low-commission-split-brokerage-ontario-2026">Summitly — low-commission split brokerage comparison, Ontario 2026</a>.</li>
+      <li>Desk fees, splits, caps and fee menus across Canada: <a href="https://bremo.io/real-estate-brokerage-fees-canada">BREMO — brokerage fees, desk fees, splits &amp; caps</a>.</li>
+      <li>100%-commission shop terms ($109/mo + $395–$599 per transaction, published): <a href="https://www.rightathomerealtycareers.com/new-agents">Right at Home Realty — agent economics</a>. Annual caps vary (Keller Williams ≈ $23k; eXp ≈ C$16k; Real 85/15 + $12k cap) — this tool shows a single deal.</li>
+      <li>Commission context: the FCAC gives a broad 2–6% range, explicitly not an average; fees are set by agreement and competition: <a href="https://propertymesh.ca/real-estate-agent-cost">PropertyMesh — what you actually pay</a>. TRESA confirms fees are negotiable.</li>
+      <li>Industry-reported models, rounded. Verified October 2026. Estimates only — <em>not an appraisal, not advice</em>; your representation agreement is the only binding number.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What next?</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>Price the toll itself, in your own deal:</strong> the <a href="toll.html">Toll Calculator</a> — then bring the split here.</li>
+      <li><strong>The buyer-side half — negotiate it:</strong> run the <a href="coop-off.html">Co-op-Off Calculator</a> or the step-by-step <a href="../pages/coop-playbook.html">Playbook</a>.</li>
+      <li><strong>Want the full Terminal?</strong> <a href="../index.html#waitlist">Join the founding-member list</a> — free tools, success fees only, no spam.</li>
+    </ul>
+  </section>
+
+  <p class="note">Spotted a wrong number? <a href="mailto:hello@keyanddeed.ca">Tell us</a> — corrections jump the queue.</p>
+
+  <footer class="disclaimer">Key & Deed — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var HST_RATE = 0.13;
+
+  function fmt(n){ return new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n); }
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
+
+  // Reported models (sources in the panel): gross = listing-side commission, pre-tax.
+  function split(model, gross){
+    if (model === 'franchise'){ var royalty = gross * 0.06, rem = gross - royalty; return { royalty: royalty, agent: rem * 0.70, brokerage: royalty + rem * 0.30 }; }
+    if (model === 'cloud'){ return { royalty: 0, agent: gross * 0.80, brokerage: gross * 0.20 }; }
+    return { royalty: 0, agent: Math.max(0, gross - 599), brokerage: gross > 0 ? 599 : 0 }; // flat100, + $109/mo fees
+  }
+  var NOTES = {
+    franchise: 'Traditional franchise office: ~6% royalty off the top, then a 70/30 split of what remains.',
+    cloud: 'Cloud brokerage: 80/20 until a C$16,000 annual cap — once the cap is hit, later deals pay the agent 100%.',
+    flat100: '100%-commission shop: $109/mo + ~$599 per deal — the agent carries their own E&O, dues and marketing.'
+  };
+
+  function update(){
+    var price = Math.max(50000, num('price'));
+    var list = num('list') / 100, coop = num('coop') / 100;
+    var model = $('model').value;
+    var applyHst = $('hst').checked;
+
+    var comm = price * (list + coop);
+    var hst = applyHst ? comm * HST_RATE : 0;
+    var allin = comm + hst;
+    var coopSide = price * coop;
+    var gross = price * list;
+    var s = split(model, gross);
+
+    $('totalcomm').textContent = fmt(comm);
+    $('hstline').textContent = fmt(hst);
+    $('allin').textContent = fmt(allin) + ' — ' + (allin / price * 100).toFixed(2) + '% of the price';
+    $('coop').textContent = fmt(coopSide);
+    $('lsgross').textContent = fmt(gross);
+    $('royalty').textContent = s.royalty > 0 ? fmt(s.royalty) + ' (6% of GCI)' : '$0 — none';
+    $('agent').textContent = fmt(s.agent);
+    $('brokerage').textContent = model === 'flat100' ? fmt(s.brokerage) + ' (+ $109/mo fees)' : fmt(s.brokerage);
+
+    var flow = 'Where the ' + fmt(allin) + ' lands: ' + fmt(coopSide) + ' out to the buyer side · ' + fmt(s.agent) + ' to the agent · ' + fmt(s.brokerage) + ' to the listing brokerage';
+    if (applyHst) flow += ' · ' + fmt(hst) + ' to HST';
+    $('flow').textContent = flow + '.';
+
+    $('modelnote').textContent = NOTES[model] || '';
+
+    var anchor = price > 800000 ? 700000 : 1000000;
+    var aComm = anchor * (list + coop);
+    var aAll = aComm * (applyHst ? 1 + HST_RATE : 1);
+    var aAgent = split(model, anchor * list).agent;
+    var sgn = function(v){ return (v >= 0 ? '−' : '+') + fmt(Math.abs(v)); };
+    $('equiv').textContent = 'Same deal at ' + fmt(anchor) + ': the seller pays ' + fmt(aAll) + ' (' + sgn(allin - aAll) + '), the agent nets ' + fmt(aAgent) + ' (' + sgn(s.agent - aAgent) + '). The percentage moves with the price — the work doesn\'t.';
+
+    var mrow = function(label, v, max, cls){
+      var w = v > 0 ? Math.max(1.6, Math.min(100, v / max * 100)) : 0;
+      return '<div class="meter-row"><span>' + label + '</span><span class="meter ' + cls + '"><i style="width:' + w + '%"></i></span><span class="val">' + fmt(v) + '</span></div>';
+    };
+    var mt = Math.max(allin, 1);
+    $('meters').innerHTML =
+      mrow('Buyer-side brokerage', coopSide, mt, 'grey') +
+      mrow('The agent', s.agent, mt, '') +
+      mrow('Listing brokerage', s.brokerage, mt, 'grey') +
+      (applyHst ? mrow('HST', hst, mt, 'grey') : '');
+  }
+
+  function shareLink(){
+    var p = new URLSearchParams();
+    p.set('p', $('price').value); p.set('l', $('list').value); p.set('c', $('coop').value);
+    p.set('m', $('model').value); p.set('h', $('hst').checked ? '1' : '0');
+    var url = location.origin + location.pathname + '?' + p.toString();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ $('copied').textContent = 'Copied — show it to whoever is quoting you.'; });
+    } else { $('copied').textContent = url; }
+  }
+
+  ['price','list','coop','model','hst'].forEach(function(id){
+    $(id).addEventListener('input', update);
+    $(id).addEventListener('change', update);
+  });
+  $('share').addEventListener('click', shareLink);
+
+  var q = new URLSearchParams(location.search);
+  if (q.get('p')) $('price').value = q.get('p');
+  if (q.get('l')) $('list').value = q.get('l');
+  if (q.get('c')) $('coop').value = q.get('c');
+  if (q.get('m')) $('model').value = q.get('m');
+  if (q.get('h') === '0') $('hst').checked = false;
+
+  update();
+})();
+</script>
+</body>
+</html>
