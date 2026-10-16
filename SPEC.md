@@ -17,7 +17,7 @@ The free prosumer toolkit — landing + 4 calculators + charter pages + waitlist
 - Hosting: GitHub Pages or Cloudflare Pages (deploy when brand+domain lock). **No analytics v1** (privacy); add privacy-friendly later.
 
 ## Waitlist (decided: FormSubmit — zero-account)
-- Live on the landing page: posts to `formsubmit.co/ajax/[[EMAIL]]`, AJAX with graceful mailto fallback. **Activation:** one confirmation click (emailed after the domain email exists). Tally.so remains the fallback option.
+- Live on the landing page: posts to `formsubmit.co/ajax/hello@keyanddeed.ca`, AJAX with graceful mailto fallback. **Activation:** one confirmation click (emailed after the domain email exists). Tally.so remains the fallback option.
 - Fields: email, city, "what are you solving?" dropdown (buy/sell/rent/RTO/commercial). Honeypot + `_captcha=false` included.
 
 ## Tools — v1 scope & build order

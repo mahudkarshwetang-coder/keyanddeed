@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lock the brand: replace all [[NAME]] / [[DOMAIN]] / [[EMAIL]] / [[YEAR]] tokens
+"""Lock the brand: replace all Key & Deed / keyanddeed.ca / hello@keyanddeed.ca / 2026 tokens
 across the whole site in one command. Run from the repo root:
 
     python3 scripts/finalize.py "Key & Deed" "keyanddeed.ca"
@@ -21,10 +21,10 @@ def main() -> int:
     domain = sys.argv[2].replace("https://", "").replace("http://", "").strip("/")
     root = pathlib.Path(__file__).resolve().parents[1]
     repl = {
-        "[[NAME]]": brand,
-        "[[DOMAIN]]": domain,
-        "[[EMAIL]]": f"hello@{domain}",
-        "[[YEAR]]": str(datetime.date.today().year),
+        "Key & Deed": brand,
+        "keyanddeed.ca": domain,
+        "hello@keyanddeed.ca": f"hello@{domain}",
+        "2026": str(datetime.date.today().year),
     }
     total = 0
     for path in sorted(root.rglob("*")):

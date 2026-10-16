@@ -1,6 +1,6 @@
 # Terminal — repo README
 
-Phase 0 build of the free prosumer real-estate toolkit for **[[NAME]]** (brand pending — `[[NAME]]` tokens until lock).
+Phase 0 build of the free prosumer real-estate toolkit for **Key & Deed** (brand pending — `Key & Deed` tokens until lock).
 
 **Status: v1 complete + tested (Oct 14, 2026).** 5 tools, 4 doctrine pages, 3 legal pages, waitlist form, SEO files, smoke-test suite.
 
@@ -25,14 +25,14 @@ via an iframe harness (390px iframe) or real device emulation instead. Desktop s
 
 ## Brand lock (do this when the domain is bought)
     python3 scripts/finalize.py "Key & Deed" "keyanddeed.ca"
-Replaces `[[NAME]]` `[[DOMAIN]]` `[[EMAIL]]` `[[YEAR]]` everywhere (site + docs + robots/sitemap).
+Replaces `Key & Deed` `keyanddeed.ca` `hello@keyanddeed.ca` `2026` everywhere (site + docs + robots/sitemap).
 Then regenerate the social card (see the comment inside `assets/og-card.html`):
     msedge --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=1500 \
       --window-size=1200,630 --screenshot=assets/og.png assets/og-card.html
 
 ## Deploy (static, no build step)
 1. Push this repo to GitHub and enable Pages (or connect it to Cloudflare Pages, output dir = repo root). Add a `CNAME` file (`keyanddeed.ca`) if using GitHub Pages + custom domain.
-2. **Waitlist activation:** the form posts to `formsubmit.co/ajax/[[EMAIL]]`. After the domain email exists, do ONE test submission and click the confirmation link FormSubmit emails you (one-time). Until then, the form fails gracefully with a mailto fallback. (Tally.so remains an alternative.)
+2. **Waitlist activation:** the form posts to `formsubmit.co/ajax/hello@keyanddeed.ca`. After the domain email exists, do ONE test submission and click the confirmation link FormSubmit emails you (one-time). Until then, the form fails gracefully with a mailto fallback. (Tally.so remains an alternative.)
 3. Set the custom domain, enable HTTPS; on Cloudflare add security headers (HSTS, X-Content-Type-Options, Referrer-Policy).
 4. Re-run `node tests/smoke.mjs` after any edit — keep it green before deploying.
 

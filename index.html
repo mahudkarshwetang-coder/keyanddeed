@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>[[NAME]] — real estate without the tolls</title>
+<title>Key & Deed — real estate without the tolls</title>
 <meta name="description" content="Free prosumer tools for buying, selling, renting and rent-to-own across Canada. No fees until you win. Nothing hidden.">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <meta name="theme-color" content="#171310">
 <meta property="og:type" content="website">
-<meta property="og:title" content="[[NAME]] — real estate without the tolls">
-<meta property="og:url" content="https://[[DOMAIN]]/">
+<meta property="og:title" content="Key & Deed — real estate without the tolls">
+<meta property="og:url" content="https://keyanddeed.ca/">
 <meta property="og:description" content="Free prosumer tools for buying, selling, renting and rent-to-own across Canada. No fees until you win. Nothing hidden.">
-<meta property="og:image" content="https://[[DOMAIN]]/assets/og.png">
+<meta property="og:image" content="https://keyanddeed.ca/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="/">[[NAME]]</a>
+    <a class="brand" href="/">Key & Deed</a>
     <nav>
       <a href="tools/toll.html">Toll Calculator</a>
       <a href="tools/coop-off.html">Co-op-Off</a>
@@ -40,7 +40,7 @@
       <p class="pick" id="pick"></p>
       <div class="waitlist" id="waitlist">
         <p style="margin:0 0 12px"><strong>Early access</strong> — founding-member invite when we reach your city. No spam, one email when it matters (see our <a href="pages/privacy.html">privacy policy</a>).</p>
-        <form id="wlform" action="https://formsubmit.co/ajax/[[EMAIL]]" method="POST">
+        <form id="wlform" action="https://formsubmit.co/ajax/hello@keyanddeed.ca" method="POST">
           <div class="grid">
             <div><label for="wl-email">Email</label><input id="wl-email" name="email" type="email" required placeholder="you@example.com"></div>
             <div><label for="wl-city">City</label><input id="wl-city" name="city" type="text" placeholder="Toronto"></div>
@@ -56,7 +56,7 @@
             </div>
           </div>
           <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-          <input type="hidden" name="_subject" value="[[NAME]] waitlist signup">
+          <input type="hidden" name="_subject" value="Key & Deed waitlist signup">
           <input type="hidden" name="_captcha" value="false">
           <p style="margin:14px 0 0"><button type="submit" id="wlbtn">Join the waitlist</button> <span class="note" id="wlmsg" aria-live="polite"></span></p>
         </form>
@@ -107,7 +107,7 @@
 
 <footer class="site-footer wrap">
   <p>Estimates, not appraisals. Tools, not advice. Every number cites its source.
-  Success fees only — we earn when you win. © [[YEAR]] [[NAME]]</p>
+  Success fees only — we earn when you win. © 2026 Key & Deed</p>
 <p class="legal legal-links"><a href="pages/privacy.html">Privacy</a> · <a href="pages/terms.html">Terms</a> · <a href="pages/accessibility.html">Accessibility</a></p>
 </footer>
 
@@ -151,7 +151,7 @@
       })
       .catch(function(){
         btn.disabled = false;
-        msg.innerHTML = "Couldn't reach the signup service right now — email <strong>[[EMAIL]]</strong> and we'll add you by hand.";
+        msg.innerHTML = "Couldn't reach the signup service right now — email <strong>hello@keyanddeed.ca</strong> and we'll add you by hand.";
       });
   });
 })();
