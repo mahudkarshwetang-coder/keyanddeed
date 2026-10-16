@@ -17,7 +17,7 @@ const ok = (cond, msg) => {
   else { failures++; console.log('  FAIL  ' + msg); }
 };
 
-const toolPages = ['tools/toll.html','tools/coop-off.html','tools/rent.html','tools/rto.html','tools/leverage.html'];
+const toolPages = ['tools/toll.html','tools/closing.html','tools/coop-off.html','tools/rent.html','tools/rto.html','tools/leverage.html'];
 const allPages = ['index.html','404.html', ...toolPages,
   'pages/receipts.html','pages/open-book.html','pages/rto-charter.html','pages/fee-card.html','pages/how-we-make-money.html',
   'pages/privacy.html','pages/terms.html','pages/accessibility.html','pages/coop-playbook.html'];
@@ -107,6 +107,33 @@ for (const page of allPages) {
   ];
   const failed = checks2.filter(c => !c[0]).map(c => c[1]);
   ok(failed.length === 0, page + ': meta' + (failed.length ? ' — missing: ' + failed.join(', ') : ''));
+}
+
+console.log('\n## Closing-cost calculator: golden values (research dossier worked examples)');
+{
+  const html = readFileSync(join(root, 'tools/closing.html'), 'utf8');
+  const code = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join('\n;\n');
+  const fmt0 = n => new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n);
+  const run = over => {
+    const ids = buildDom(html);
+    for (const k in over) if (ids[k]) ids[k][over[k][0]] = over[k][1];
+    new Function('document', 'location', code)(
+      { getElementById: id => ids[id] ?? null },
+      { search: '', origin: 'https://example.test', pathname: '/tools/closing.html' });
+    return id => String(ids[id].textContent);
+  };
+  const t = run({}); // defaults: $700k, Toronto, no FTHB
+  ok(t('ltt') === fmt0(10475), 'closing: Ontario LTT @$700k = ' + fmt0(10475) + ' — got ' + t('ltt'));
+  ok(t('mltt') === fmt0(10475), 'closing: Toronto MLTT @$700k = ' + fmt0(10475) + ' — got ' + t('mltt'));
+  ok(t('total').includes(fmt0(23930.39)), 'closing: default total ' + fmt0(23930.39) + ' — got ' + JSON.stringify(t('total')));
+  const f = run({ fthb: ['checked', true] });
+  ok(f('total').includes(fmt0(15455.39)), 'closing: FTHB total ' + fmt0(15455.39) + ' (dossier example) — got ' + JSON.stringify(f('total')));
+  ok(f('fthbon') === '-' + fmt0(4000) && f('fthbto') === '-' + fmt0(4475), 'closing: rebates applied — ' + f('fthbon') + ' / ' + f('fthbto'));
+  const o = run({ city: ['value', 'ON'] });
+  ok(o('mltt') === fmt0(0) && o('total').includes(fmt0(13339.5)), 'closing: non-Toronto total ' + fmt0(13339.5) + ' — got ' + JSON.stringify(o('total')));
+  const x = run({ price: ['value', '3500000'] });
+  ok(x('mltt') === fmt0(83475), 'closing: MLTT @$3.5M graduated tiers = ' + fmt0(83475) + ' — got ' + x('mltt'));
+  ok(x('total').includes(fmt0(160430.39)), 'closing: $3.5M total ' + fmt0(160430.39) + ' — got ' + JSON.stringify(x('total')));
 }
 
 console.log('\n' + (failures === 0 ? 'ALL ' + checks + ' CHECKS PASSED' : failures + ' of ' + checks + ' checks FAILED'));

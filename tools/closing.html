@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Closing-Cost Calculator — Key & Deed</title>
+<meta name="description" content="What it actually costs to close a purchase in Ontario — land transfer tax (Toronto included), first-time-buyer rebates, legal fees, title insurance and disbursements. Free, sourced, no signup.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<meta name="theme-color" content="#171310">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Closing-Cost Calculator — Key & Deed">
+<meta property="og:url" content="https://keyanddeed.ca/tools/closing.html">
+<meta property="og:description" content="What it actually costs to close a purchase in Ontario — land transfer tax (Toronto included), first-time-buyer rebates, legal fees, title insurance and disbursements. Free, sourced, no signup.">
+<meta property="og:image" content="https://keyanddeed.ca/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Key & Deed</a>
+    <nav>
+      <a href="toll.html">Toll Calculator</a>
+      <a href="closing.html" class="active" aria-current="page">Closing Costs</a>
+      <a href="coop-off.html">Co-op-Off</a>
+      <a href="rent.html">Rent Estimator</a>
+      <a href="rto.html">RTO Calculator</a>
+      <a href="leverage.html">Leverage</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap tool">
+  <h1>The Closing-Cost Calculator</h1>
+  <p class="lead">The purchase price is step one. Here's the other bill — land transfer tax, Toronto's municipal tax, the rebates you're owed, and the closing-day costs that never make the listing. Set your price, see the total.</p>
+
+  <section class="panel">
+    <div class="grid">
+      <div><label for="price">Purchase price ($)</label><input id="price" type="number" value="700000" min="50000" step="10000"></div>
+      <div><label for="city">Where</label>
+        <select id="city">
+          <option value="TO" selected>Toronto — provincial + municipal tax</option>
+          <option value="ON">Elsewhere in Ontario — provincial tax only</option>
+        </select>
+      </div>
+      <div><label style="display:flex;align-items:center;gap:8px;margin-top:22px"><input id="fthb" type="checkbox" style="width:auto"> First-time buyer (never owned a home, anywhere)</label></div>
+    </div>
+    <p class="note" style="margin-top:14px">Adjust these to your quotes — typical published Ontario figures:</p>
+    <div class="grid">
+      <div><label for="legal">Legal fees ($ + 13% HST)</label><input id="legal" type="number" value="1650" min="0" step="50"></div>
+      <div><label for="title">Title insurance ($)</label><input id="title" type="number" value="300" min="0" step="50"></div>
+      <div><label for="disb">Disbursements — searches, registrations ($)</label><input id="disb" type="number" value="700" min="0" step="50"></div>
+    </div>
+    <p class="note" style="margin-top:10px">Straightforward resale, 1–2 unit residential. Land transfer tax is statutory and lands on closing day; the three lines above are typical estimates you can overwrite.</p>
+  </section>
+
+  <section class="panel">
+    <div class="result-line" id="total" aria-live="polite">—</div>
+    <div class="grid">
+      <div><p class="note">Ontario land transfer tax</p><div class="out" id="ltt">—</div></div>
+      <div><p class="note">First-time buyer refund — Ontario</p><div class="out" id="fthbon">—</div></div>
+      <div><p class="note">Toronto municipal tax (MLTT)</p><div class="out" id="mltt">—</div></div>
+      <div><p class="note">First-time buyer refund — Toronto</p><div class="out" id="fthbto">—</div></div>
+      <div><p class="note">MLTT administration fee</p><div class="out" id="mlttfee">—</div></div>
+      <div><p class="note">Legal fees, incl. HST</p><div class="out" id="legalout">—</div></div>
+      <div><p class="note">Title insurance</p><div class="out" id="titleout">—</div></div>
+      <div><p class="note">Disbursements</p><div class="out" id="disbout">—</div></div>
+    </div>
+    <p class="note" id="equiv"></p>
+    <p class="note">Not included: adjustments (prepaid taxes and utilities settle through your statement of adjustments), moving, and — for new builds — HST on the price (rebate rules apply; this tool covers resale). Non-resident buyer? Ontario NRST (25%) and Toronto MNRST (10%) apply on top.</p>
+    <div class="meters" id="meters" aria-hidden="true"></div>
+    <p style="margin-top:14px"><button id="share">Copy shareable link</button> <span class="note" id="copied"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">Sources &amp; assumptions</h2>
+    <ul class="note" style="margin:0;padding-left:18px">
+      <li>Ontario LTT bands + 2.5% on the excess over $2M (1–2 unit residential): <a href="https://www.ontario.ca/document/land-transfer-tax/calculating-land-transfer-tax">ontario.ca — Calculating Land Transfer Tax</a> (updated Apr 2026).</li>
+      <li>First-time buyer refund up to $4,000 (never owned anywhere; proportionate for mixed co-buyers): <a href="https://www.ontario.ca/document/land-transfer-tax/land-transfer-tax-refunds-first-time-homebuyers">ontario.ca — LTT refunds for first-time homebuyers</a>.</li>
+      <li>Toronto MLTT bands + high-value tiers (4.40%–8.60%, from Apr 1 2026), $102.56+HST admin fee, $4,475 FTHB rebate: <a href="https://www.toronto.ca/services-payments/property-taxes-utilities/municipal-land-transfer-tax-mltt/municipal-land-transfer-tax-mltt-rates-and-fees">toronto.ca — MLTT Rates &amp; Fees</a> (updated Apr 7, 2026).</li>
+      <li>Legal fees, title insurance and disbursement lines: published Ontario firm examples — <a href="https://barbarianlaw.ca/real-estate-lawyer-closing-costs">Barbarian Law</a> ($1,650 + HST purchase, incl. one mortgage) and <a href="https://kellysantini.com/articles/guide-our-services-and-fees-when-you-are-purchasing-house">Kelly Santini LLP</a> (disbursement and title-insurance schedule).</li>
+      <li>Rent equivalence: CMHC Fall 2025 average turnover 2-bedroom rent, Toronto (~$2,540/mo).</li>
+      <li>Bands and fees verified October 2026. Estimates only — <em>not an appraisal, not advice, not an offer of brokerage services</em>. Your lawyer's statement of adjustments is the final word.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2 style="font-size:18px;margin:0 0 10px">What next?</h2>
+    <ul class="note" style="margin:0;padding-left:18px;line-height:1.9">
+      <li><strong>Selling too?</strong> The <a href="toll.html">Toll Calculator</a> prices the commission side — the other half of the bill.</li>
+      <li><strong>Buying without an agent?</strong> Run the <a href="coop-off.html">Co-op-Off Calculator</a>, and check your position with the <a href="leverage.html">Leverage Scorer</a>.</li>
+      <li><strong>Want the full Terminal?</strong> <a href="../index.html#waitlist">Join the founding-member list</a> — free tools, success fees only, no spam.</li>
+    </ul>
+  </section>
+
+  <p class="note">Spotted a wrong number? <a href="mailto:hello@keyanddeed.ca">Tell us</a> — corrections jump the queue.</p>
+
+  <footer class="disclaimer">Key & Deed — success fees only. We earn when you win. Nothing hidden, ever.<p class="legal legal-links"><a href="../pages/privacy.html">Privacy</a> · <a href="../pages/terms.html">Terms</a> · <a href="../pages/accessibility.html">Accessibility</a></p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var TORONTO_RENT_2BR = 2540;
+  var MLTT_FEE = 102.56 * 1.13; // admin fee + HST
+
+  function fmt(n){ return new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0}).format(n); }
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
+
+  // Graduated tax from statutory bands: [[upperLimit, rate], ...], last limit Infinity.
+  function bandTax(price, bands){
+    var tax = 0, prev = 0;
+    for (var i = 0; i < bands.length; i++){
+      var lim = bands[i][0], rate = bands[i][1];
+      var upTo = Math.min(price, lim);
+      if (upTo > prev){ tax += (upTo - prev) * rate; prev = upTo; }
+      if (price <= lim) break;
+    }
+    return tax;
+  }
+  // Ontario LTT, 1–2 unit residential (ontario.ca, Apr 2026)
+  var ON_BANDS = [[55000,0.005],[250000,0.01],[400000,0.015],[2000000,0.02],[Infinity,0.025]];
+  // Toronto MLTT, 1–2 unit residential (toronto.ca, Apr 7 2026 — graduated tiers from Apr 1 2026)
+  var TO_BANDS = [[55000,0.005],[250000,0.01],[400000,0.015],[2000000,0.02],[3000000,0.025],[4000000,0.044],[5000000,0.0545],[10000000,0.065],[20000000,0.0755],[Infinity,0.086]];
+
+  function update(){
+    var price = Math.max(50000, num('price'));
+    var inToronto = $('city').value === 'TO';
+    var fthb = $('fthb').checked;
+    var legal = num('legal'), title = num('title'), disb = num('disb');
+
+    var onTax = bandTax(price, ON_BANDS);
+    var onReb = fthb ? Math.min(onTax, 4000) : 0;
+    var mlttTax = inToronto ? bandTax(price, TO_BANDS) : 0;
+    var mlttReb = (inToronto && fthb) ? Math.min(mlttTax, 4475) : 0;
+    var mlttFee = inToronto ? MLTT_FEE : 0;
+    var legalTax = legal * 0.13;
+
+    var total = (onTax - onReb) + (mlttTax - mlttReb) + mlttFee + legal + legalTax + title + disb;
+
+    $('ltt').textContent = fmt(onTax);
+    $('fthbon').textContent = onReb > 0 ? '-' + fmt(onReb) : fmt(0);
+    $('mltt').textContent = fmt(mlttTax);
+    $('fthbto').textContent = mlttReb > 0 ? '-' + fmt(mlttReb) : fmt(0);
+    $('mlttfee').textContent = fmt(mlttFee);
+    $('legalout').textContent = fmt(legal + legalTax);
+    $('titleout').textContent = fmt(title);
+    $('disbout').textContent = fmt(disb);
+    $('total').textContent = 'Closing-day total: ' + fmt(total) + ' — ' + (total / price * 100).toFixed(1) + '% of the purchase price';
+
+    $('equiv').textContent = '≈ ' + Math.round(total / TORONTO_RENT_2BR) + ' months of Toronto rent (CMHC Fall 2025)';
+
+    var mrow = function(label, v, max, cls){
+      var w = v > 0 ? Math.max(1.6, Math.min(100, v / max * 100)) : 0;
+      return '<div class="meter-row"><span>' + label + '</span><span class="meter ' + cls + '"><i style="width:' + w + '%"></i></span><span class="val">' + fmt(v) + '</span></div>';
+    };
+    var mt = Math.max(total, 1);
+    $('meters').innerHTML =
+      mrow('Ontario tax, net', onTax - onReb, mt, 'grey') +
+      mrow('Toronto tax + fee, net', mlttTax - mlttReb + mlttFee, mt, 'grey') +
+      mrow('Legal, title, disbursements', legal + legalTax + title + disb, mt, '');
+  }
+
+  function shareLink(){
+    var p = new URLSearchParams();
+    p.set('p', $('price').value); p.set('c', $('city').value); p.set('f', $('fthb').checked ? '1' : '0');
+    p.set('l', $('legal').value); p.set('t', $('title').value); p.set('d', $('disb').value);
+    var url = location.origin + location.pathname + '?' + p.toString();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ $('copied').textContent = 'Copied — send it to your lawyer.'; });
+    } else { $('copied').textContent = url; }
+  }
+
+  ['price','city','fthb','legal','title','disb'].forEach(function(id){
+    $(id).addEventListener('input', update);
+    $(id).addEventListener('change', update);
+  });
+  $('share').addEventListener('click', shareLink);
+
+  var q = new URLSearchParams(location.search);
+  if (q.get('p')) $('price').value = q.get('p');
+  if (q.get('c')) $('city').value = q.get('c');
+  if (q.get('f') === '1') $('fthb').checked = true;
+  if (q.get('l')) $('legal').value = q.get('l');
+  if (q.get('t')) $('title').value = q.get('t');
+  if (q.get('d')) $('disb').value = q.get('d');
+
+  update();
+})();
+</script>
+</body>
+</html>
