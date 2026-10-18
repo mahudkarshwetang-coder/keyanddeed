@@ -18,10 +18,39 @@ a:hover{color:var(--accent)}
 .site-header{background:var(--ink);border-bottom:1px solid var(--dborder)}
 .site-header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;flex-wrap:wrap}
 .brand{font:700 21px/1 var(--serif);letter-spacing:.01em;color:#fff;text-decoration:none}
-.site-header nav{display:flex;gap:16px;flex-wrap:wrap}
-.site-header nav a{text-decoration:none;font-size:13.5px;color:#b8ae9e}
-.site-header nav a:hover{color:#fff}
-.site-header nav a.active{color:var(--bright);font-weight:600}
+.site-header nav.mainnav{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+/* dropdown buttons — CSS-only <details>, no JavaScript */
+.menu{position:relative}
+.menu summary{list-style:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  font:700 13px var(--sans);color:#cfc6b6;background:transparent;border:1px solid var(--dborder);
+  border-radius:999px;padding:8px 15px;user-select:none;-webkit-user-select:none;
+  transition:color .15s,border-color .15s,background .15s}
+.menu summary::-webkit-details-marker{display:none}
+.menu summary::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);
+  transition:transform .15s;margin-left:1px}
+.menu summary:hover{color:#fff;border-color:#5a4c38}
+.menu[open] summary,.menu.has-active summary{color:var(--bright);border-color:var(--bright)}
+.menu[open] summary{background:rgba(255,176,32,.08)}
+.menu[open] summary::after{transform:translateY(1px) rotate(-135deg)}
+.menu-panel{position:absolute;top:calc(100% + 10px);right:0;left:auto;z-index:60;min-width:238px;
+  max-width:min(560px,calc(100vw - 32px));background:#211b14;border:1px solid var(--dborder);
+  border-radius:12px;padding:8px;box-shadow:0 18px 44px rgba(0,0,0,.45)}
+.menu-label{margin:6px 10px;font:700 10.5px/1 var(--sans);letter-spacing:.14em;
+  text-transform:uppercase;color:#8d8272}
+.menu-panel a{display:block;padding:9px 11px;border-radius:8px;text-decoration:none;
+  font-size:14px;color:#d9d2c6;white-space:nowrap}
+.menu-panel a:hover{background:rgba(255,255,255,.06);color:#fff}
+.menu-panel a.active{color:var(--bright);background:rgba(255,176,32,.09);font-weight:600}
+@media (max-width:720px){
+  .site-header .wrap{gap:10px}
+  .site-header nav.mainnav{width:100%;position:relative}
+  .menu{flex:1 1 0;position:static}
+  .menu summary{width:100%;justify-content:space-between}
+  .menu-panel{position:absolute;top:calc(100% + 8px);left:0;right:0;width:auto;max-width:none;
+    min-width:0;box-shadow:0 18px 44px rgba(0,0,0,.45)}
+  .menu-panel a{white-space:normal}
+}
 
 /* hero band (homepage) */
 .hero{background:var(--ink);color:var(--ondark);padding:60px 0 48px}
